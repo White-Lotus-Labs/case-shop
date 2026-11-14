@@ -9,6 +9,7 @@ import { BundleList } from "@/components/Bundle";
 import { CaseStage, type StagePhase } from "@/components/case3d/CaseStage";
 import { History } from "@/components/History";
 import { Inventory } from "@/components/Inventory";
+import { Homepage } from "@/components/Homepage";
 import type { BundleAsset, HistoryEntry } from "@/lib/api";
 import { fmt, formatAmount } from "@/lib/cases";
 import { runtimeCases, runtimeConnector } from "@/lib/runtime";
@@ -130,6 +131,7 @@ export default function App() {
   const [historyError, setHistoryError] = useState<string | null>(null);
   const [personalError, setPersonalError] = useState<string | null>(null);
   const [inventoryOpen, setInventoryOpen] = useState(false);
+  const [view, setView] = useState<"cases" | "home">("cases");
   const [pending, setPending] = useState<string | null>(null);
   const signing = useRef(false);
   const [animating, setAnimating] = useState(false);
@@ -765,28 +767,68 @@ export default function App() {
         />
       </div>
       <header className="material-bar fixed inset-x-0 top-0 z-40">
-        <div className="mx-auto flex h-[62px] items-center gap-3 px-4 sm:gap-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-[64px] items-center gap-2 px-3 sm:gap-4 sm:px-6 lg:px-8">
           <div className="mr-auto flex items-center gap-3">
-            <img
-              src="/fujitora-logo.jpg"
-              alt="Fujitora Case Shop Logo"
-              className="h-10 sm:h-11 w-auto rounded-lg shadow-[0_0_18px_rgba(157,78,221,0.55)] object-cover border border-purple-500/40"
-            />
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="font-display font-extrabold text-[13px] sm:text-[16px] tracking-wider text-white">
-                  FUJITORA <span className="text-[#00EC97]">CASE SHOP</span>
-                </span>
-                <span className="hidden items-center gap-1.5 rounded-full bg-[#00EC97]/15 px-2.5 py-0.5 font-mono text-[10px] font-bold text-[#00EC97] border border-[#00EC97]/30 sm:inline-flex">
-                  <img src="/near-badge.webp" alt="NEAR" className="size-3.5 object-contain" />
-                  NEAR HACKATHON
-                </span>
+            <button
+              type="button"
+              onClick={() => {
+                sound.tap();
+                setView("home");
+              }}
+              className="group flex items-center gap-2.5 sm:gap-3 text-left focus:outline-none"
+              title="View Homepage"
+            >
+              <img
+                src="/fujitora-logo.png"
+                alt="Fujitora Case Shop Logo"
+                className="h-10 sm:h-11 w-auto rounded-lg shadow-[0_0_18px_rgba(157,78,221,0.55)] object-contain border border-purple-500/40 group-hover:scale-105 transition-transform"
+              />
+              <div className="flex flex-col justify-center">
+                <div className="flex items-center gap-2">
+                  <span className="font-display font-extrabold text-[13px] sm:text-[16px] tracking-wider text-white">
+                    FUJITORA <span className="text-[#00EC97]">CASE SHOP</span>
+                  </span>
+                  <span className="hidden items-center gap-1.5 rounded-full bg-[#00EC97]/15 px-2.5 py-0.5 font-mono text-[10px] font-bold text-[#00EC97] border border-[#00EC97]/30 sm:inline-flex">
+                    <img src="/near-badge.webp" alt="NEAR" className="size-3.5 object-contain" />
+                    NEAR HACKATHON
+                  </span>
+                </div>
               </div>
-              <span className="text-[10px] sm:text-[11px] text-label-2 font-mono">
-                Zushi Zushi no Mi · Testnet Web3 Vault
-              </span>
-            </div>
+            </button>
           </div>
+
+          {/* Upper Panel Navigation */}
+          <nav aria-label="Main Navigation" className="flex items-center rounded-xl bg-purple-500/15 p-1 border border-purple-500/25">
+            <button
+              type="button"
+              onClick={() => {
+                sound.tap();
+                setView("home");
+              }}
+              className={`px-3 py-1 rounded-lg text-[12px] sm:text-[13px] font-display font-bold transition-all ${
+                view === "home"
+                  ? "bg-[#9d4edd] text-white shadow-[0_0_14px_rgba(157,78,221,0.6)]"
+                  : "text-label-2 hover:text-white"
+              }`}
+            >
+              Homepage
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                sound.tap();
+                setView("cases");
+              }}
+              className={`px-3 py-1 rounded-lg text-[12px] sm:text-[13px] font-display font-bold transition-all ${
+                view === "cases"
+                  ? "bg-[#9d4edd] text-white shadow-[0_0_14px_rgba(157,78,221,0.6)]"
+                  : "text-label-2 hover:text-white"
+              }`}
+            >
+              Cases
+            </button>
+          </nav>
+
           <button
             type="button"
             aria-label={muted ? "Turn sound on" : "Turn sound off"}
@@ -820,10 +862,10 @@ export default function App() {
                 }}
               >
                 <Glyph name="shippingbox" className="size-3.5 text-[#00EC97]" />
-                <span>My Vault</span>
+                <span className="hidden sm:inline">My Vault</span>
               </Button>
               <span
-                className="font-mono text-[12px] text-label-2 hidden max-w-[180px] truncate lg:inline bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/20"
+                className="font-mono text-[12px] text-label-2 hidden max-w-[150px] truncate xl:inline bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/20"
                 title={account}
               >
                 {account}
@@ -852,6 +894,18 @@ export default function App() {
           )}
         </div>
       </header>
+      {view === "home" ? (
+        <main className="relative z-10 flex min-h-dvh flex-col px-3 pt-[80px] pb-8 sm:px-6 lg:px-8">
+          <Homepage
+            onExploreCases={() => {
+              sound.tap();
+              setView("cases");
+            }}
+            onConnectWallet={() => void controller.current?.connect()}
+            account={account}
+          />
+        </main>
+      ) : (
       <div className="pointer-events-none relative z-10 flex min-h-dvh flex-col px-3 pt-[72px] pb-3 sm:px-6 lg:px-8 lg:pt-[82px] lg:pb-8">
         <div className="pointer-events-auto mx-auto w-full max-w-[760px]">
           <SegmentedControl
@@ -905,7 +959,7 @@ export default function App() {
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[#00EC97]/15 px-2.5 py-0.5 text-[11px] font-mono font-semibold text-[#00EC97] border border-[#00EC97]/30">
               <img src="/near-badge.webp" alt="NEAR" className="size-3.5 object-contain" />
-              <span>NEAR Testnet Verified</span>
+              <span>NEAR Verified</span>
             </span>
           </div>
         </div>
@@ -925,7 +979,7 @@ export default function App() {
             </div>
             <BundleList assets={displayedAssets} dense />
             <span className="t-caption text-label-3 font-mono">
-              Verified on NEAR Testnet
+              Verified on NEAR Protocol
             </span>
           </div>
         )}
@@ -968,7 +1022,7 @@ export default function App() {
               </span>
             </div>
             <Section glass>
-              <Row title="Protocol Network" accessory="NEAR · Testnet" />
+              <Row title="Protocol Network" accessory="NEAR Protocol" />
               {account && (
                 <Row
                   title="Available Balance"
@@ -1094,12 +1148,13 @@ export default function App() {
               <p className="t-footnote px-1 text-center text-label-3 text-[12px]">
                 {account
                   ? "Fujitora's gravity pulls rewards directly to your wallet via NEAR smart contract."
-                  : "Connect your NEAR Testnet wallet to open this case."}
+                  : "Connect your NEAR wallet to open this case."}
               </p>
             </div>
           </aside>
         </div>
       </div>
+      )}
       <Inventory
         open={inventoryOpen}
         onOpenChange={setInventoryOpen}

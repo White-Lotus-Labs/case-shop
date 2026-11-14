@@ -414,9 +414,9 @@ function labelTexture(t: TierVisual) {
   g.letterSpacing = '10px'
   engrave(t.name.toUpperCase(), 50, 118, 68, 800, 1)
   
-  // Subline: Protocol series & Zushi Zushi reference
+  // Subline: Protocol series & Case reference
   g.letterSpacing = '4px'
-  engrave(`ZUSHI-ZUSHI · SERIES NCS-0${t.number} · Ⓝ VERIFIED`, 52, 178, 22, 600, 0.7)
+  engrave(`FUJITORA · SERIES NCS-0${t.number} · Ⓝ VERIFIED`, 52, 178, 22, 600, 0.7)
   
   // Right side: Tier number badge
   g.textAlign = 'right'

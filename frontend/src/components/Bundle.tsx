@@ -26,7 +26,7 @@ export function BundleList({
             )}
             <span
               className="min-w-0 font-medium truncate"
-              title={asset.contractId ?? "Native Testnet NEAR"}
+              title={asset.contractId ?? "Native NEAR"}
             >
               {formatAmount(asset.amount, asset.decimals)}{" "}
               <span className="text-white font-semibold">{asset.symbol}</span>

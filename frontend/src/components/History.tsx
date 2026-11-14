@@ -56,7 +56,7 @@ export function History({
                 Live On-Chain Openings
               </div>
               <p className="t-caption mt-0.5 text-label-2">
-                Finalized NEAR Testnet records · Latest {entries.length} vault activations
+                Finalized on-chain records · Latest {entries.length} vault activations
               </p>
             </div>
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#00EC97]/15 text-[#00EC97] text-[11px] font-semibold border border-[#00EC97]/30">

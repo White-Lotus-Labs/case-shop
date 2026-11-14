@@ -45,7 +45,7 @@ export const TIERS: Record<string, TierVisual> = {
     name: "Gravity Blade",
     tagline: "Shikomizue · Kinetic Pulse",
     description:
-      "Forged with the resonant frequency of Fujitora's cane-sword. Dark wisteria titanium housing foundational gravitational energy on NEAR Testnet.",
+      "Forged with the resonant frequency of Fujitora's cane-sword. Dark wisteria titanium housing foundational gravitational energy on NEAR Protocol.",
     kanji: "重力", // Gravity
     ui: "#9d4edd",
     body: {
@@ -139,9 +139,9 @@ export const TIERS: Record<string, TierVisual> = {
     id: "platinum",
     number: "04",
     name: "Singularity Well",
-    tagline: "Zushi Zushi · Event Horizon",
+    tagline: "Gravitational Well · Event Horizon",
     description:
-      "Pearl-violet ceramic suspension shell holding an artificial micro-singularity. Heavy gravitational curvature warps NEAR testnet transaction blocks.",
+      "Pearl-violet ceramic suspension shell holding an artificial micro-singularity. Heavy gravitational curvature warps NEAR blockchain transaction blocks.",
     kanji: "引力", // Attraction / Gravitation
     ui: "#c084fc",
     body: {
