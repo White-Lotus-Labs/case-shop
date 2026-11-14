@@ -1,6 +1,6 @@
 {
   "network": "testnet",
-  "rpcUrl": "https://rpc.testnet.fastnear.com",
+  "rpcUrl": "https://near-testnet.drpc.org",
   "ownerId": "needmore_1_near.testnet",
   "treasuryId": "needmore_1_near.testnet",
   "cases": [
