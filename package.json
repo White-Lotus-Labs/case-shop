@@ -1,0 +1,48 @@
+{
+  "name": "iroh-case-shop",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "predev": "npm run db:migrate",
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "typecheck": "next typegen && tsc --noEmit",
+    "postinstall": "node scripts/generate-prisma.mjs",
+    "db:migrate": "node scripts/migrate-db.mjs",
+    "test": "vitest run",
+    "contracts:build": "bash scripts/contracts.sh build",
+    "contracts:test": "bash scripts/contracts.sh test",
+    "contracts:simulate": "bash scripts/contracts.sh simulate",
+    "contracts:integration": "bash scripts/contracts.sh integration",
+    "player:worker": "node --import tsx scripts/player-wallet/worker.ts",
+    "player:verify-testnet": "node --import tsx scripts/player-wallet/verify-testnet.ts",
+    "test:player:sandbox": "node --import tsx tests/player-wallet-sandbox.mts"
+  },
+  "dependencies": {
+    "@google-cloud/kms": "6.3.0",
+    "@hot-labs/near-connect": "0.12.0",
+    "@prisma/client": "6.4.1",
+    "bcryptjs": "3.0.2",
+    "fast-crc32c": "2.0.0",
+    "near-api-js": "7.5.3",
+    "next": "16.3.6",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "tsx": "4.23.15",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "prettier": "3.6.2",
+    "prisma": "6.4.1",
+    "typescript": "5.9.3",
+    "vitest": "5.0.1"
+  }
+}

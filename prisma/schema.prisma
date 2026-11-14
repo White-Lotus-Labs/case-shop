@@ -1,0 +1,230 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String                @id @default(uuid())
+  nickname             String
+  nicknameKey          String                @unique
+  passwordHash         String?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  authVersion          Int                   @default(0)
+  disabledAt           DateTime?
+  gameWallet           GameWallet?
+  externalWallets      ExternalWallet[]
+  walletChallenges     WalletChallenge[]
+  walletAuthorizations WalletAuthorization[]
+  walletOperations     WalletOperation[]
+  starterClaim         StarterClaim?
+  sessions             Session[]
+  chats                Chat[]
+}
+
+model Session {
+  id              String   @id @default(uuid())
+  tokenHash       String   @unique
+  authenticatedAt DateTime @default(now())
+  authMethod      String   @default("password")
+  authVersion     Int      @default(0)
+  userId          String
+  expiresAt       DateTime
+  createdAt       DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Chat {
+  id                   String    @id @default(uuid())
+  userId               String
+  title                String    @default("New chat")
+  nansenConversationId String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages             Message[]
+
+  @@index([userId, updatedAt])
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  chatId    String
+  role      String
+  content   String
+  status    String   @default("complete")
+  createdAt DateTime @default(now())
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@index([chatId, id])
+}
+
+/// Saved Nansen readings. Visitors read these rows. A background refresh rewrites them.
+model NansenSnapshot {
+  key          String   @id
+  payload      String
+  fetchedAt    DateTime
+  stale        Boolean  @default(false)
+  refreshError String?
+  updatedAt    DateTime @updatedAt
+}
+
+model GameWallet {
+  id                   String            @id @default(uuid())
+  userId               String            @unique
+  user                 User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider             String            @default("google-kms")
+  status               String            @default("unconfigured")
+  accountId            String?           @unique
+  publicKey            String?
+  keyVersion           String?           @unique
+  provisionRequestedAt DateTime?
+  activeOperationId    String?           @unique
+  leaseToken           String?
+  leaseExpiresAt       DateTime?
+  lastVerifiedBlock    String?
+  errorCode            String?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  operations           WalletOperation[]
+  starterClaim         StarterClaim?
+}
+
+model ExternalWallet {
+  id                String   @id @default(uuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  network           String   @default("testnet")
+  accountId         String
+  verifiedPublicKey String
+  linkedAt          DateTime @default(now())
+
+  @@unique([network, accountId])
+  @@index([userId])
+}
+
+model WalletChallenge {
+  id              String    @id @default(uuid())
+  userId          String?
+  user            User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionId       String?
+  purpose         String
+  accountId       String
+  origin          String
+  recipient       String
+  message         String
+  nonceBase64     String    @unique
+  bindingHash     String
+  scope           String?
+  scopeHash       String?
+  operationId     String?
+  targetAccountId String?
+  expiresAt       DateTime
+  consumedAt      DateTime?
+  createdAt       DateTime  @default(now())
+
+  @@index([expiresAt])
+}
+
+model WalletAuthorization {
+  id         String    @id @default(uuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionId  String
+  scope      String
+  scopeHash  String
+  method     String
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([userId, sessionId])
+}
+
+model WalletOperation {
+  id                 String            @id @default(uuid())
+  userId             String
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  walletId           String
+  wallet             GameWallet        @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  sessionId          String
+  authVersion        Int
+  idempotencyKey     String
+  kind               String
+  requestJson        String
+  requestHash        String
+  previewJson        String
+  intentHash         String
+  status             String            @default("prepared")
+  stepsJson          String
+  stepIndex          Int               @default(0)
+  sourceAccountId    String
+  nativeCostCapYocto String
+  expiresAt          DateTime
+  authorizedAt       DateTime?
+  authorizationId    String?
+  txHash             String?
+  errorCode          String?
+  resultJson         String?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  transactions       GameTransaction[]
+
+  @@unique([userId, idempotencyKey])
+  @@index([status, createdAt])
+  @@index([userId, createdAt])
+}
+
+model GameTransaction {
+  id              String          @id @default(uuid())
+  operationId     String
+  operation       WalletOperation @relation(fields: [operationId], references: [id], onDelete: Cascade)
+  stepIndex       Int
+  callJson        String
+  nonce           String
+  blockHash       String
+  unsignedBase64  String
+  signedBase64    String?
+  txHash          String?         @unique
+  status          String          @default("unsigned")
+  sendAttemptedAt DateTime?
+  finalizedHeight String?
+  receiptJson     String?
+  feeYocto        String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@unique([operationId, stepIndex])
+}
+
+model StarterClaim {
+  userId          String     @id
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  walletId        String     @unique
+  wallet          GameWallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  observedClaimed Boolean?
+  observedBlock   String?
+  txHash          String?
+  checkedAt       DateTime?
+}
+
+model AuthRateLimit {
+  key             String   @id
+  count           Int
+  windowStartedAt DateTime
+  updatedAt       DateTime @updatedAt
+}
+
+model SignerWorkerStatus {
+  id         String   @id
+  provider   String
+  lastSeenAt DateTime
+  status     String
+}

@@ -1,0 +1,24 @@
+{
+  "network": "local Sandbox only, not public Testnet",
+  "checks": [
+    "Implicit account activated with expected Ed25519 public key",
+    "Game-wallet predecessor claimed exactly 1000 USDI and finalized balance",
+    "Duplicate starter claim failed without changing balance",
+    "External account deposited real local NEP-141 USDI into game wallet",
+    "Game wallet registered recipient storage and withdrew exact USDI amount",
+    "Reward-token storage and real local NEP-141 deposit succeeded",
+    "Existing case contract recorded implicit game wallet as opening player",
+    "WalletEngine and dedicated SigningWorker allocated, activated and finalized real local USDI claim",
+    "Operation-bound withdrawal authorization finalized through real queued worker transaction",
+    "Two-step recipient registration and withdrawal finalized with distinct persisted nonces",
+    "Linked external deposit finalized through operation confirmation and exact receipt attachment",
+    "Existing case opened via queued worker with full FT resolver amount and game-wallet history identity"
+  ],
+  "hashes": [
+    "7roofVC1F6oRVhE267gVqJpjGeQwRvLmu6RkH4pc1YBR",
+    "CzZyBMJTYFPXsRb29kd6gFeJuDakbGeyTQpmGdmBjhMC",
+    "F93Ydx3AdK2Qzao3TM6wJ4DoyWhUWAF5EWjqQ5h1hgJm",
+    "3fvNXbfa8E7TUgBBXzcqN6S1tMrSZ7VueLy5X76JP96V",
+    "7nkC3rp7TfSvigvv6jaGP8KmsH6gcFfC87fZvqPt2SHk"
+  ]
+}

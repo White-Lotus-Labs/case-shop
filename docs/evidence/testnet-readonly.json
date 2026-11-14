@@ -1,0 +1,28 @@
+{
+  "network": "public NEAR Testnet, read-only",
+  "checkedAt": "2026-11-14T14:59:32.569Z",
+  "blockHeight": "277672459",
+  "blockHash": "CHRDdVYENjFm2WVptnmFu1pt1RbRMMEmwEWd2Es2kWQD",
+  "contracts": [
+    "bamboo.needmore_1_near.testnet",
+    "blackdragon.needmore_1_near.testnet",
+    "cases-needmore-1-near.testnet",
+    "gear.needmore_1_near.testnet",
+    "iroh-test-aurora.testnet",
+    "iroh-test-rhea.testnet",
+    "iroh-test-shitzu.testnet",
+    "linear.needmore_1_near.testnet",
+    "moon.needmore_1_near.testnet",
+    "mpdao.needmore_1_near.testnet",
+    "neko.needmore_1_near.testnet",
+    "phoenix.needmore_1_near.testnet",
+    "purge.needmore_1_near.testnet",
+    "reserve.needmore_1_near.testnet",
+    "rnear.needmore_1_near.testnet",
+    "stnear.needmore_1_near.testnet",
+    "usdi-needmore-1-near.testnet",
+    "wnear.needmore_1_near.testnet"
+  ],
+  "publicPlayerWalletProvisioned": false,
+  "publicTransactionsSubmitted": 0
+}
