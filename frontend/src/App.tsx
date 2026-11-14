@@ -697,31 +697,31 @@ export default function App() {
       }
     : selectedActive?.status === "Claimable"
       ? {
-          label: "Retry reward payout",
+          label: "Claim Reward Payout",
           action: () => selectedActive && recover(selectedActive),
           disabled: false,
         }
       : selectedActive?.status === "RandomnessPending"
         ? {
-            label: "Continue opening",
+            label: "Complete Gravitational Pull",
             action: () => selectedActive && recover(selectedActive),
             disabled: false,
           }
         : selectedActive?.status === "Paying"
           ? {
-              label: "Sending rewards to your wallet",
+              label: "Dispensing NEAR to wallet...",
               action: () => {},
               disabled: true,
             }
           : uncertain
             ? {
-                label: "Verify wallet transaction",
+                label: "Verify Wallet Transaction",
                 action: verifyTransaction,
                 disabled: false,
               }
             : selectedResult
               ? {
-                  label: "Open another case",
+                  label: "Summon Another Case",
                   action: () => {
                     if (account)
                       clearNativePending(
@@ -734,13 +734,13 @@ export default function App() {
                   disabled: false,
                 }
               : {
-                  label: `Open for ${fmt(definition.price)}`,
+                  label: `Unleash Gravity · ${fmt(definition.price)}`,
                   action: buy,
                   disabled: !verified || !quote?.can_open,
                 };
   const status = !verified
     ? definition.deploymentStatus === "planned"
-      ? "Deployment pending"
+      ? "Deployment Pending"
       : "Unavailable"
     : (selectedActive?.status ??
       (selectedResult ? selectedResult.status : "Ready"));
@@ -764,12 +764,29 @@ export default function App() {
           }
         />
       </div>
-      <header className="material-bar hairline-b fixed inset-x-0 top-0 z-40">
-        <div className="mx-auto flex h-[52px] items-center gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
-          <span className="t-headline mr-auto truncate">
-            Near Case Shop{" "}
-            <span className="t-caption text-label-2">Testnet</span>
-          </span>
+      <header className="material-bar fixed inset-x-0 top-0 z-40">
+        <div className="mx-auto flex h-[62px] items-center gap-3 px-4 sm:gap-4 sm:px-6 lg:px-8">
+          <div className="mr-auto flex items-center gap-3">
+            <img
+              src="/fujitora-logo.jpg"
+              alt="Fujitora Case Shop Logo"
+              className="h-10 sm:h-11 w-auto rounded-lg shadow-[0_0_18px_rgba(157,78,221,0.55)] object-cover border border-purple-500/40"
+            />
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <span className="font-display font-extrabold text-[13px] sm:text-[16px] tracking-wider text-white">
+                  FUJITORA <span className="text-[#00EC97]">CASE SHOP</span>
+                </span>
+                <span className="hidden items-center gap-1.5 rounded-full bg-[#00EC97]/15 px-2.5 py-0.5 font-mono text-[10px] font-bold text-[#00EC97] border border-[#00EC97]/30 sm:inline-flex">
+                  <img src="/near-badge.webp" alt="NEAR" className="size-3.5 object-contain" />
+                  NEAR HACKATHON
+                </span>
+              </div>
+              <span className="text-[10px] sm:text-[11px] text-label-2 font-mono">
+                Zushi Zushi no Mi · Testnet Web3 Vault
+              </span>
+            </div>
+          </div>
           <button
             type="button"
             aria-label={muted ? "Turn sound on" : "Turn sound off"}
@@ -778,7 +795,7 @@ export default function App() {
               sound.setMuted(!muted);
               if (muted) sound.tap();
             }}
-            className="grid size-[30px] place-items-center rounded-full text-label-2 hover:bg-fill-3"
+            className="grid size-[32px] place-items-center rounded-full text-label-2 hover:bg-fill-3 hover:text-white transition-colors"
           >
             <Glyph
               name={muted ? "speaker-xmark" : "speaker"}
@@ -788,9 +805,10 @@ export default function App() {
           {account ? (
             <>
               <span
-                className="t-footnote tnum hidden text-label-2 md:inline"
+                className="tnum hidden items-center gap-2 rounded-full bg-[#00EC97]/10 px-3 py-1 font-mono text-[13px] font-semibold text-[#00EC97] border border-[#00EC97]/25 md:inline-flex"
                 data-testid="wallet-balance"
               >
+                <img src="/near-badge.webp" alt="NEAR" className="size-4 object-contain" />
                 {balance === null ? "Reading balance…" : fmt(balance)}
               </span>
               <Button
@@ -801,11 +819,11 @@ export default function App() {
                   setInventoryOpen(true);
                 }}
               >
-                <Glyph name="shippingbox" className="size-3.5" />
-                My openings
+                <Glyph name="shippingbox" className="size-3.5 text-[#00EC97]" />
+                <span>My Vault</span>
               </Button>
               <span
-                className="t-footnote hidden max-w-[220px] truncate text-label-2 lg:inline"
+                className="font-mono text-[12px] text-label-2 hidden max-w-[180px] truncate lg:inline bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/20"
                 title={account}
               >
                 {account}
@@ -826,14 +844,16 @@ export default function App() {
               onClick={() => void controller.current?.connect()}
               loading={wallet.busy === "connect"}
               disabled={wallet.status === "initializing"}
+              className="gap-2"
             >
-              Connect Wallet
+              <img src="/near-badge.webp" alt="NEAR" className="size-4 object-contain" />
+              <span>Connect Wallet</span>
             </Button>
           )}
         </div>
       </header>
-      <div className="pointer-events-none relative z-10 flex min-h-dvh flex-col px-3 pt-[68px] pb-3 sm:px-6 lg:px-8 lg:pt-[76px] lg:pb-8">
-        <div className="pointer-events-auto mx-auto w-full max-w-[740px]">
+      <div className="pointer-events-none relative z-10 flex min-h-dvh flex-col px-3 pt-[72px] pb-3 sm:px-6 lg:px-8 lg:pt-[82px] lg:pb-8">
+        <div className="pointer-events-auto mx-auto w-full max-w-[760px]">
           <SegmentedControl
             size="large"
             label="Case tier"
@@ -846,42 +866,66 @@ export default function App() {
             disabled={busy}
             renderOption={(id) => {
               const item = CASES.find((row) => row.id === id) ?? CASES[0];
+              const t = tierOf(id);
               return (
                 <span className="flex flex-col items-center gap-0.5 py-1.5">
-                  <span className="flex items-center gap-1.5 text-[10px] sm:text-[12px]">
+                  <span className="flex items-center gap-1.5 font-display text-[10px] font-bold sm:text-[12px] tracking-wide">
                     <span className="hidden sm:inline-flex">
-                      <Dot color={tierOf(id).ui} size={6} />
+                      <Dot color={t.ui} size={6} />
                     </span>
-                    {item.name.replace(" Case", "")}
+                    {t.name}
                   </span>
-                  <span className="t-caption-2 tnum font-normal text-label-2">
-                    {fmt(item.price)}
+                  <span className="tnum font-mono text-[10px] sm:text-[11px] font-normal text-label-2 flex items-center gap-0.5">
+                    <span className="text-[#00EC97]">Ⓝ</span>
+                    {fmt(item.price).replace(" NEAR", "")}
                   </span>
                 </span>
               );
             }}
           />
         </div>
-        <div key={caseId} className="appear mt-5 max-w-[340px] px-1 lg:mt-10">
-          <h1 className="font-display text-[28px] leading-[34px] font-bold tracking-[0.012em] lg:text-[34px] lg:leading-[41px]">
-            {definition.name}
-          </h1>
-          <p className="t-subheadline mt-1 line-clamp-2 text-label-2">
-            {definition.description}
-          </p>
-        </div>
-        <div className="min-h-[180px] flex-1" />
-        {currentOpening?.reward && !animating && (
-          <div className="material-regular appear pointer-events-auto absolute inset-x-0 bottom-8 mx-auto hidden w-[240px] flex-col gap-3 rounded-[16px] px-4 py-3 lg:flex">
-            <span
-              className="t-caption font-semibold"
-              style={{ color: RARITY_COLOR[currentOpening.tier ?? "Common"] }}
-            >
-              {currentOpening.tier} reward
+        <div key={caseId} className="appear mt-5 max-w-[420px] px-1 lg:mt-8">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="font-serif text-[17px] font-bold text-[#c4b5fd] bg-purple-500/20 px-2.5 py-0.5 rounded-lg border border-purple-500/30">
+              {tier.kanji}
             </span>
+            <span className="font-mono text-[11px] font-bold text-[#00EC97] tracking-wider uppercase">
+              {tier.tagline}
+            </span>
+          </div>
+          <h1 className="font-display text-[26px] leading-[32px] font-extrabold tracking-wide text-white lg:text-[34px] lg:leading-[40px] drop-shadow-[0_0_24px_rgba(157,78,221,0.35)]">
+            {tier.name}
+          </h1>
+          <p className="t-subheadline mt-1.5 line-clamp-3 text-label-2 leading-relaxed">
+            {tier.description}
+          </p>
+          <div className="mt-3 flex items-center gap-2">
+            <span className="inline-flex items-center gap-1 rounded-full bg-purple-500/15 px-2.5 py-0.5 text-[11px] font-mono font-medium text-purple-300 border border-purple-500/30">
+              <span>NCS-0{tier.number}</span>
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#00EC97]/15 px-2.5 py-0.5 text-[11px] font-mono font-semibold text-[#00EC97] border border-[#00EC97]/30">
+              <img src="/near-badge.webp" alt="NEAR" className="size-3.5 object-contain" />
+              <span>NEAR Testnet Verified</span>
+            </span>
+          </div>
+        </div>
+        <div className="min-h-[160px] flex-1" />
+        {currentOpening?.reward && !animating && (
+          <div className="material-regular appear pointer-events-auto absolute inset-x-0 bottom-8 mx-auto hidden w-[270px] flex-col gap-3 rounded-[20px] p-4 border border-purple-500/40 shadow-[0_0_35px_rgba(0,236,151,0.25)] lg:flex">
+            <div className="flex items-center justify-between">
+              <span
+                className="font-display text-[12px] font-extrabold tracking-wider uppercase"
+                style={{ color: RARITY_COLOR[currentOpening.tier ?? "Common"] }}
+              >
+                ✦ {currentOpening.tier} REWARD
+              </span>
+              <span className="text-[10px] font-mono bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded font-semibold">
+                #{currentOpening.opening_id}
+              </span>
+            </div>
             <BundleList assets={displayedAssets} dense />
-            <span className="t-caption text-label-2">
-              Verified opening #{currentOpening.opening_id}
+            <span className="t-caption text-label-3 font-mono">
+              Verified on NEAR Testnet
             </span>
           </div>
         )}
@@ -899,19 +943,23 @@ export default function App() {
           />
           <aside
             aria-label="Case controls"
-            className="material-regular pointer-events-auto flex w-full flex-col gap-4 rounded-[22px] p-4 shadow-[0_24px_60px_rgb(0_0_0/0.45),inset_0_0.5px_0_rgb(255_255_255/0.08)] lg:w-[360px]"
+            className="material-regular pointer-events-auto flex w-full flex-col gap-4 rounded-[24px] p-4.5 border border-purple-500/30 shadow-[0_30px_70px_rgba(0,0,0,0.7),0_0_35px_rgba(157,78,221,0.18)] lg:w-[380px]"
           >
             <div className="flex items-start justify-between gap-4 px-1">
               <div className="flex flex-col">
-                <span className="t-footnote text-label-2">
-                  {definition.name}
+                <span className="font-mono text-[12px] text-label-2 uppercase tracking-wide">
+                  {tier.name}
                 </span>
-                <span className="t-title-1 tnum">{fmt(definition.price)}</span>
-                <span className="t-caption text-label-2">
-                  Native Testnet NEAR
+                <span className="font-display text-[26px] font-black tnum text-white flex items-center gap-2 mt-0.5">
+                  <img src="/near-badge.webp" alt="NEAR" className="size-6 object-contain" />
+                  {fmt(definition.price).replace(" NEAR", "")}
+                  <span className="font-mono text-[14px] font-normal text-[#00EC97]">NEAR</span>
+                </span>
+                <span className="t-caption text-label-3 font-mono">
+                  Smart Contract · Zero-Lag
                 </span>
               </div>
-              <span className="t-footnote flex items-center gap-1.5 rounded-full bg-fill-3 px-2.5 py-1 text-label-2">
+              <span className="t-footnote flex items-center gap-1.5 rounded-full bg-purple-500/15 border border-purple-500/25 px-3 py-1 font-mono text-[11px] text-white">
                 <Dot
                   color={verified ? tier.ui : "var(--color-label-3)"}
                   size={6}
@@ -920,21 +968,21 @@ export default function App() {
               </span>
             </div>
             <Section glass>
-              <Row title="Pay with" accessory="NEAR · Testnet" />
+              <Row title="Protocol Network" accessory="NEAR · Testnet" />
               {account && (
                 <Row
-                  title="Available balance"
+                  title="Available Balance"
                   accessory={balance === null ? "Reading…" : fmt(balance)}
                 />
               )}
               {quote && (
                 <Row
-                  title="Opening storage"
+                  title="Opening Storage"
                   accessory={fmt(quote.storage_deposit)}
                 />
               )}
               {pool && (
-                <Row title="Prize pool" accessory={fmt(pool.pool_funds)} />
+                <Row title="Gravity Prize Pool" accessory={fmt(pool.pool_funds)} />
               )}
             </Section>
             {quote && (
@@ -945,24 +993,23 @@ export default function App() {
                     title={reward.tier}
                     leading={<Dot color={RARITY_COLOR[reward.tier]} />}
                     accessory={
-                      <span className="tnum">
+                      <span className="tnum font-mono text-[12px]">
                         {percent(quote[reward.probability])} ·{" "}
-                        {fmt(reward.amount)}
+                        <span className="text-[#00EC97] font-semibold">{fmt(reward.amount)}</span>
                       </span>
                     }
                   />
                 ))}
-                <div className="t-caption px-4 py-2 text-label-2">
+                <div className="t-caption px-4 py-2 text-label-2 border-t border-purple-500/15">
                   {definition.bonusRewards.map((reward) => (
-                    <p key={reward.token_contract_id}>
-                      {reward.tier} token:{" "}
+                    <p key={reward.token_contract_id} className="font-mono text-[11px] text-purple-300">
+                      ◈ {reward.tier} Token Drop:{" "}
                       {formatAmount(reward.amount, reward.token_decimals)}{" "}
                       {reward.token_symbol}
                     </p>
                   ))}
-                  <p className="mt-2">
-                    One configured token is selected from the winning tier.
-                    Probabilities come from the current contract quote.
+                  <p className="mt-1.5 text-label-3 text-[11px]">
+                    Provably-fair on-chain selection. Probabilities from live contract quote.
                   </p>
                 </div>
               </Section>
@@ -970,15 +1017,15 @@ export default function App() {
             {displayedAssets.length > 0 && (
               <Section glass>
                 <div className="px-4 py-3">
-                  <div className="t-footnote mb-2 font-semibold">
-                    {currentOpening?.tier} · Opening #
-                    {currentOpening?.opening_id}
+                  <div className="t-footnote mb-2 font-display font-bold text-white flex items-center justify-between">
+                    <span>{currentOpening?.tier} Reward</span>
+                    <span className="font-mono text-[11px] text-[#00EC97]">#{currentOpening?.opening_id}</span>
                   </div>
                   <BundleList assets={displayedAssets} />
-                  <p className="t-caption mt-2 text-label-2">
+                  <p className="t-caption mt-2 text-label-3">
                     {currentOpening?.status === "Completed"
-                      ? "Rewards were transferred directly to your wallet."
-                      : "The contract retains unpaid rewards for recovery."}
+                      ? "Rewards transferred directly to your NEAR wallet."
+                      : "Unpaid rewards retained by contract for immediate recovery."}
                   </p>
                 </div>
               </Section>
@@ -986,8 +1033,7 @@ export default function App() {
             {uncertain && (
               <div className="flex flex-col gap-2">
                 <p className="t-footnote text-label-2">
-                  Your previous purchase is awaiting verification. Check your
-                  wallet before signing again.
+                  Previous purchase awaiting on-chain confirmation.
                 </p>
                 <input
                   aria-label="Wallet transaction hash"
@@ -996,7 +1042,7 @@ export default function App() {
                   onChange={(event) =>
                     setRecoveryHash(event.target.value.trim())
                   }
-                  className="t-footnote w-full rounded-[10px] bg-fill-3 px-3 py-2 text-label"
+                  className="t-footnote w-full rounded-[10px] bg-purple-500/10 border border-purple-500/30 px-3 py-2 text-label font-mono text-[12px]"
                 />
                 {uncertain.action === "open" && (
                   <>
@@ -1006,12 +1052,10 @@ export default function App() {
                       onClick={retryOriginal}
                       disabled={busy}
                     >
-                      Retry original purchase
+                      Retry Original Purchase
                     </Button>
-                    <p className="t-caption text-label-2">
-                      The original nonce prevents a second purchase. A rejected
-                      or expired retry refunds the deposit and may cost network
-                      gas.
+                    <p className="t-caption text-label-3 font-mono">
+                      Original nonce guarantees protection against double-purchase.
                     </p>
                   </>
                 )}
@@ -1020,18 +1064,18 @@ export default function App() {
             {(error || wallet.error) && (
               <p
                 role="alert"
-                className="t-footnote rounded-[12px] bg-danger/15 px-4 py-3 text-danger"
+                className="t-footnote rounded-[14px] bg-danger/20 border border-danger/40 px-4 py-3 text-red-300"
               >
                 {error || wallet.error}
               </p>
             )}
             {deploymentError && (
-              <p role="status" className="t-footnote px-1 text-label-2">
+              <p role="status" className="t-footnote px-1 text-label-2 font-mono text-[12px]">
                 {deploymentError}
               </p>
             )}
             {verified && quote && !quote.can_open && !active && (
-              <p role="status" className="t-footnote px-1 text-label-2">
+              <p role="status" className="t-footnote px-1 text-label-2 font-mono text-[12px]">
                 {quote.reason}
               </p>
             )}
@@ -1045,12 +1089,12 @@ export default function App() {
                 disabled={primary.disabled}
               >
                 {pending ??
-                  (animating ? "Opening verified reward" : primary.label)}
+                  (animating ? "Channeling Gravitational Pull..." : primary.label)}
               </Button>
-              <p className="t-footnote px-1 text-label-2">
+              <p className="t-footnote px-1 text-center text-label-3 text-[12px]">
                 {account
-                  ? "Your wallet confirms the price, storage and network gas. Rewards arrive automatically."
-                  : "Connect your own NEAR Testnet wallet to open a case."}
+                  ? "Fujitora's gravity pulls rewards directly to your wallet via NEAR smart contract."
+                  : "Connect your NEAR Testnet wallet to open this case."}
               </p>
             </div>
           </aside>

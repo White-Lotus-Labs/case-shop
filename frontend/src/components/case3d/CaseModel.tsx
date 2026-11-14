@@ -358,32 +358,71 @@ function labelTexture(t: TierVisual) {
   c.width = 1024
   c.height = 256
   const g = c.getContext('2d') as CanvasRenderingContext2D & { letterSpacing?: string }
+  
+  // Base plate
   g.fillStyle = t.label.plate
   g.fillRect(0, 0, 1024, 256)
+  
+  // Outer cybernetic border
   g.strokeStyle = t.label.ink
-  g.globalAlpha = 0.3
+  g.globalAlpha = 0.4
   g.lineWidth = 3
-  g.strokeRect(20, 20, 984, 216)
+  g.strokeRect(16, 16, 992, 224)
+  
+  // Inner hairline with cut corners
+  g.lineWidth = 1.5
+  g.globalAlpha = 0.25
+  g.strokeRect(26, 26, 972, 204)
+  
+  // Tech ticks on bottom edge
   g.fillStyle = t.label.ink
-  g.globalAlpha = 0.45
-  for (let i = 0; i <= 44; i++) g.fillRect(62 + i * 20.5, 204, 2, i % 5 === 0 ? 20 : 10)
-  const font = '-apple-system, "SF Pro Display", "Helvetica Neue", Arial, sans-serif'
-  const engrave = (text: string, x: number, y: number, size: number, weight: number, alpha: number) => {
-    g.font = `${weight} ${size}px ${font}`
-    g.globalAlpha = 0.55
+  g.globalAlpha = 0.5
+  for (let i = 0; i <= 48; i++) {
+    g.fillRect(52 + i * 19.2, 210, 2, i % 6 === 0 ? 16 : 8)
+  }
+  
+  // Subtle Kanji watermark in the background (Justice, Gravity, etc.)
+  if (t.kanji) {
+    g.save()
+    g.textAlign = 'right'
+    g.textBaseline = 'middle'
+    g.font = '900 130px "Cinzel", "Noto Serif JP", serif'
+    g.fillStyle = t.label.ink
+    g.globalAlpha = 0.12
+    g.fillText(t.kanji, 930, 128)
+    g.restore()
+  }
+
+  const engrave = (text: string, x: number, y: number, size: number, weight: number, alpha: number, fontFam = 'Orbitron, sans-serif') => {
+    g.font = `${weight} ${size}px ${fontFam}`
+    g.globalAlpha = 0.6
     g.fillStyle = '#000000'
     g.fillText(text, x + 2, y + 2)
     g.globalAlpha = alpha
     g.fillStyle = t.label.ink
     g.fillText(text, x, y)
   }
+
   g.textBaseline = 'middle'
-  g.letterSpacing = '14px'
-  engrave(t.name.toUpperCase(), 62, 100, 88, 600, 1)
-  g.letterSpacing = '6px'
-  engrave(`NCS-${t.number} · SERIES 01`, 64, 168, 28, 500, 0.7)
+  
+  // Top header: Fujitora x NEAR Hackathon
+  g.textAlign = 'left'
+  g.letterSpacing = '4px'
+  engrave('FUJITORA × NEAR HACKATHON', 52, 54, 22, 700, 0.75)
+  
+  // Center: Case name
+  g.letterSpacing = '10px'
+  engrave(t.name.toUpperCase(), 50, 118, 68, 800, 1)
+  
+  // Subline: Protocol series & Zushi Zushi reference
+  g.letterSpacing = '4px'
+  engrave(`ZUSHI-ZUSHI · SERIES NCS-0${t.number} · Ⓝ VERIFIED`, 52, 178, 22, 600, 0.7)
+  
+  // Right side: Tier number badge
   g.textAlign = 'right'
-  engrave(t.number, 962, 104, 96, 300, 0.5)
+  g.letterSpacing = '2px'
+  engrave(t.number, 970, 70, 72, 300, 0.65)
+
   const tex = new THREE.CanvasTexture(c)
   tex.colorSpace = THREE.SRGBColorSpace
   tex.anisotropy = 8

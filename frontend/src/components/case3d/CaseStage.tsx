@@ -70,18 +70,18 @@ function radialTexture() {
   return glowTex
 }
 
-/** Dark backdrop with a soft pool of tier-colored light behind the case */
+/** Dark cosmic backdrop with a soft pool of tier-colored gravity light behind the case */
 function Backdrop({ tier }: { tier: TierVisual }) {
   const mat = useMemo(
-    () => new THREE.MeshBasicMaterial({ map: radialTexture(), transparent: true, depthWrite: false, toneMapped: false, opacity: 0.08 }),
+    () => new THREE.MeshBasicMaterial({ map: radialTexture(), transparent: true, depthWrite: false, toneMapped: false, opacity: 0.22 }),
     [],
   )
   useEffect(() => void mat.color.set(tier.ui), [tier, mat])
   useEffect(() => () => mat.dispose(), [mat])
   return (
     <>
-      <color attach="background" args={['#050505']} />
-      <mesh material={mat} position={[0, 0.2, -6]} scale={[30, 18, 1]}>
+      <color attach="background" args={['#060818']} />
+      <mesh material={mat} position={[0, 0.2, -6]} scale={[32, 20, 1]}>
         <planeGeometry />
       </mesh>
     </>

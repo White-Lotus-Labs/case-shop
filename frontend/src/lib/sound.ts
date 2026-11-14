@@ -243,24 +243,26 @@ class SoundEngine {
   }
 
   /**
-   * Mechanical sequence matched to the 3D timeline (CaseStage): two latches snap open,
-   * the purge valve vents, then the lid swings up with a low air movement. Crystal tiers
-   * add a faint glassy shimmer as the light inside comes up.
+   * Fujitora Gravity sequence matched to the 3D timeline: two latches snap open,
+   * gravitational purge vents, then a deep sub-bass gravity swell rumbles as the lid swings up.
+   * High tiers add celestial shimmer of cosmic energy.
    */
   open(durationMs: number, tier: number) {
     this.play((t) => {
       const s = durationMs / 1000
       this.latch(t + 0.13 * s, tier)
       this.latch(t + 0.24 * s, tier)
-      // valve vent
-      this.noise(t + 0.3 * s, { dur: 0.5, filter: 'bandpass', from: 7000, to: 2600, q: 0.7, gain: 0.05, attack: 0.02, send: 0.2 })
-      // lid swing: air swell and a low hinge creak
+      // valve vent: gravitational air displacement
+      this.noise(t + 0.3 * s, { dur: 0.5, filter: 'bandpass', from: 6000, to: 1800, q: 0.8, gain: 0.06, attack: 0.02, send: 0.3 })
+      // lid swing: air swell and deep gravitational low-frequency hum
       const lid = t + 0.36 * s
       const swing = 0.52 * s
-      this.noise(lid, { dur: swing, filter: 'lowpass', from: 220, to: 1100, q: 0.6, gain: 0.07, attack: swing * 0.45, send: 0.3 })
-      this.tone(74, lid, { type: 'triangle', glide: 58, attack: 0.08, decay: swing, gain: 0.035, send: 0.1 })
-      if (tier >= 3) {
-        ;[2093, 2637.02, 3135.96, 4186.01].forEach((f, i) => this.tone(f, lid + swing * 0.55 + i * 0.06, { decay: 1.1, gain: 0.014, send: 0.7 }))
+      this.noise(lid, { dur: swing, filter: 'lowpass', from: 180, to: 950, q: 0.6, gain: 0.08, attack: swing * 0.45, send: 0.4 })
+      this.tone(55, lid, { type: 'sine', glide: 35, attack: 0.05, decay: swing * 1.1, gain: 0.07, send: 0.35 }) // Gravity sub-bass
+      this.tone(110, lid + 0.05, { type: 'triangle', glide: 73, attack: 0.08, decay: swing, gain: 0.04, send: 0.2 })
+      if (tier >= 2) {
+        // Celestial overtone chime
+        ;[1760, 2217.46, 2637.02, 3520].forEach((f, i) => this.tone(f, lid + swing * 0.5 + i * 0.06, { decay: 1.2, gain: 0.016, send: 0.75 }))
       }
     })
   }

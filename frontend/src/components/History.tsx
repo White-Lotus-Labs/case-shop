@@ -47,57 +47,69 @@ export function History({
         <section
           id="live-activity"
           aria-label="Activity from all players"
-          className="material-regular appear absolute bottom-full left-0 mb-2 flex max-h-[min(520px,60dvh)] w-[min(600px,calc(100vw-24px))] flex-col overflow-hidden rounded-[20px] shadow-[0_24px_60px_rgb(0_0_0/0.5)]"
+          className="material-regular appear absolute bottom-full left-0 mb-3 flex max-h-[min(540px,65dvh)] w-[min(580px,calc(100vw-24px))] flex-col overflow-hidden rounded-[22px] border border-purple-500/30 shadow-[0_30px_70px_rgba(0,0,0,0.8),0_0_30px_rgba(157,78,221,0.2)]"
         >
-          <div className="hairline-b px-5 py-4">
-            <div className="t-headline">Global opening history</div>
-            <p className="t-caption mt-1 text-label-2">
-              Finalized contract records. Latest {entries.length} openings
-              across five cases.
-            </p>
+          <div className="hairline-b px-5 py-4 bg-[#0a0d24]/90 flex items-center justify-between">
+            <div>
+              <div className="font-display text-[15px] font-bold tracking-wide text-white flex items-center gap-2">
+                <span className="size-2 rounded-full bg-[#00EC97] animate-ping" />
+                Live On-Chain Openings
+              </div>
+              <p className="t-caption mt-0.5 text-label-2">
+                Finalized NEAR Testnet records · Latest {entries.length} vault activations
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#00EC97]/15 text-[#00EC97] text-[11px] font-semibold border border-[#00EC97]/30">
+              <img src="/near-badge.webp" alt="NEAR" className="size-3.5 object-contain" />
+              <span>NEAR Verified</span>
+            </div>
           </div>
-          <div className="min-h-0 flex-1 overflow-auto px-5 pb-3">
+          <div className="min-h-0 flex-1 overflow-auto px-5 py-3">
             {error && (
-              <p role="status" className="t-footnote py-3 text-label-2">
+              <p role="status" className="t-footnote py-3 text-red-400">
                 {error}
               </p>
             )}
             {!entries.length && !error && (
-              <p className="t-footnote py-4 text-label-2">
-                No on-chain openings yet.
-              </p>
+              <div className="py-8 text-center text-label-3">
+                <Glyph name="gravity" className="mx-auto size-8 mb-2 opacity-50" />
+                <p className="t-footnote">Awaiting first on-chain case opening...</p>
+              </div>
             )}
             {entries.map((entry) => (
               <div
                 key={entry.id}
-                className="hairline-b flex items-start gap-3 py-3"
+                className="hairline-b flex items-start gap-3 py-3 hover:bg-white/[0.02] transition-colors rounded-lg px-2"
               >
                 <span
-                  className="mt-1 size-1.5 shrink-0 rounded-full"
-                  style={{ background: tierOf(entry.caseId).ui }}
+                  className="mt-1.5 size-2 shrink-0 rounded-full shadow-[0_0_8px_currentColor]"
+                  style={{ color: tierOf(entry.caseId).ui, background: tierOf(entry.caseId).ui }}
                 />
                 <div className="min-w-0 flex-1">
-                  <div className="t-footnote truncate">
-                    {entry.accountId === me ? "You" : entry.accountId}
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="t-footnote font-semibold truncate text-white">
+                      {entry.accountId === me ? "You (Connected)" : entry.accountId}
+                    </span>
+                    <span className="text-[11px] font-mono text-[#00EC97] bg-[#00EC97]/10 px-2 py-0.5 rounded border border-[#00EC97]/20">
+                      Block #{entry.height}
+                    </span>
                   </div>
-                  <div className="t-caption text-label-2">
-                    {CASES.find((c) => c.id === entry.caseId)?.name ??
-                      entry.caseId}{" "}
-                    · #{entry.openingId} · block {entry.height}
+                  <div className="text-[12px] text-label-2 mt-0.5">
+                    {CASES.find((c) => c.id === entry.caseId)?.name ?? entry.caseId}{" "}
+                    · Opening #{entry.openingId}
                   </div>
                   <div className="mt-2">
                     <BundleList assets={entry.assets} dense />
                   </div>
                 </div>
-                <span className="t-caption text-label-2">{entry.status}</span>
               </div>
             ))}
             {onMore && (
               <button
-                className="t-footnote py-3 text-[#409cff]"
+                className="t-footnote py-3 w-full text-center font-semibold text-[#00EC97] hover:text-[#55f6bb] transition-colors"
                 onClick={onMore}
               >
-                Load more openings
+                Load older transactions ↓
               </button>
             )}
           </div>
@@ -111,11 +123,14 @@ export function History({
           sound.tap();
           setOpen(!open);
         }}
-        className="material-regular flex h-11 items-center gap-2.5 rounded-full pr-4 pl-4 shadow-[inset_0_0.5px_0_rgb(255_255_255/0.08)] transition-transform active:scale-[0.97]"
+        className="material-regular flex h-11 items-center gap-2.5 rounded-full pr-4 pl-4 border border-purple-500/25 shadow-[0_4px_20px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)] transition-transform active:scale-[0.97] hover:border-purple-400/50"
       >
-        <span className="relative inline-flex size-2 rounded-full bg-success" />
-        <span className="t-subheadline font-semibold">Live Activity</span>
-        <span className="t-subheadline flex items-center gap-0.5 text-[#409cff]">
+        <span className="relative flex size-2.5">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#00EC97] opacity-75" />
+          <span className="relative inline-flex size-2.5 rounded-full bg-[#00EC97]" />
+        </span>
+        <span className="font-display text-[13px] font-bold tracking-wide text-white">Live Activity</span>
+        <span className="flex items-center gap-0.5 text-[12px] font-semibold text-[#00EC97]">
           {open ? "Hide" : "Show"}
           <Glyph
             name={open ? "chevron-down" : "chevron-up"}
