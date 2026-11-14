@@ -1,5 +1,5 @@
 [workspace]
-members = ["economics", "usdi", "case-pool", "mock-token"]
+members = ["economics", "usdi", "case-pool", "mock-token", "native-case-pool"]
 resolver = "2"
 exclude = ["integration"]
 

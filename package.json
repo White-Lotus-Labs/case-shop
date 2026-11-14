@@ -7,7 +7,6 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "predev": "npm run db:migrate",
     "dev": "next dev --hostname 127.0.0.1",
     "build": "next build",
     "start": "next start --hostname 127.0.0.1",
@@ -19,8 +18,9 @@
     "contracts:test": "bash scripts/contracts.sh test",
     "contracts:simulate": "bash scripts/contracts.sh simulate",
     "contracts:integration": "bash scripts/contracts.sh integration",
-    "player:worker": "node --import tsx scripts/player-wallet/worker.ts",
-    "player:verify-testnet": "node --import tsx scripts/player-wallet/verify-testnet.ts",
+    "native:prepare-deployment": "node scripts/native/prepare-deployment.mjs",
+    "native:preflight": "node scripts/native/preflight.mjs",
+    "test:native:browser": "node --import tsx tests/native/browser.mts",
     "test:player:sandbox": "node --import tsx tests/player-wallet-sandbox.mts"
   },
   "dependencies": {
@@ -40,6 +40,7 @@
     "@types/node": "24.10.1",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
+    "playwright": "1.62.1",
     "prettier": "3.6.2",
     "prisma": "6.4.1",
     "typescript": "5.9.3",

@@ -1336,6 +1336,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "near-native-case-pool"
+version = "0.1.0"
+dependencies = [
+ "iroh-economics",
+ "near-contract-standards",
+ "near-sdk",
+]
+
+[[package]]
 name = "near-parameters"
 version = "0.37.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"

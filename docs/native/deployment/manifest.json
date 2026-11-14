@@ -1,0 +1,138 @@
+{
+  "network": "testnet",
+  "status": "deployed-verified",
+  "contractVersion": "native-v1",
+  "wasmPath": "contracts/target/wasm32-unknown-unknown/release/near_native_case_pool.wasm",
+  "wasmBytes": 454644,
+  "sha256": "173736c8b20a7a02713ff49195ec4001875a1209bd83709701f4418376b8854a",
+  "codeHash": "2ZdD6hPhuYnZytCyhPcdxCNhWV4gbXcQHfDz3KbfionR",
+  "ownerId": "needmore_1_near.testnet",
+  "treasuryId": "needmore_1_near.testnet",
+  "reservedConcurrentOpenings": "4",
+  "accountCreationNear": "25",
+  "nativeRewardFundingYocto": "100000000000000000000000000",
+  "tokenStorageFundingYocto": "31250000000000000000000",
+  "gasAllowanceYocto": "10000000000000000000000000",
+  "budgetEstimateYocto": "135031250000000000000000000",
+  "budgetLimitYocto": "150000000000000000000000000",
+  "fundingPolicy": "The remaining pool budget is allocated in proportion to each case's maximum native reward. Every pool and FT candidate covers at least four maximum concurrent rewards. The 10 NEAR gas allowance is an estimate, and any unused amount remains with the owner until separately funded to a pool.",
+  "tokens": [
+    {
+      "tokenContractId": "iroh-test-shitzu.testnet",
+      "symbol": "SHITZU",
+      "decimals": 6,
+      "amount": "300000000",
+      "storageMinimum": "1250000000000000000000"
+    },
+    {
+      "tokenContractId": "blackdragon.needmore_1_near.testnet",
+      "symbol": "BLACKDRAGON",
+      "decimals": 24,
+      "amount": "100000000000000000000000000",
+      "storageMinimum": "1250000000000000000000"
+    },
+    {
+      "tokenContractId": "neko.needmore_1_near.testnet",
+      "symbol": "NEKO",
+      "decimals": 24,
+      "amount": "240000000000000000000000000",
+      "storageMinimum": "1250000000000000000000"
+    },
+    {
+      "tokenContractId": "iroh-test-rhea.testnet",
+      "symbol": "RHEA",
+      "decimals": 6,
+      "amount": "72000000",
+      "storageMinimum": "1250000000000000000000"
+    },
+    {
+      "tokenContractId": "iroh-test-aurora.testnet",
+      "symbol": "AURORA",
+      "decimals": 6,
+      "amount": "52000000",
+      "storageMinimum": "1250000000000000000000"
+    },
+    {
+      "tokenContractId": "purge.needmore_1_near.testnet",
+      "symbol": "PURGE",
+      "decimals": 18,
+      "amount": "80000000000000000000",
+      "storageMinimum": "1250000000000000000000"
+    },
+    {
+      "tokenContractId": "gear.needmore_1_near.testnet",
+      "symbol": "GEAR",
+      "decimals": 18,
+      "amount": "8000000000000000000",
+      "storageMinimum": "1250000000000000000000"
+    },
+    {
+      "tokenContractId": "mpdao.needmore_1_near.testnet",
+      "symbol": "mpDAO",
+      "decimals": 6,
+      "amount": "108000000",
+      "storageMinimum": "1250000000000000000000"
+    },
+    {
+      "tokenContractId": "stnear.needmore_1_near.testnet",
+      "symbol": "STNEAR",
+      "decimals": 24,
+      "amount": "5200000000000000000000000",
+      "storageMinimum": "1250000000000000000000"
+    },
+    {
+      "tokenContractId": "linear.needmore_1_near.testnet",
+      "symbol": "LINEAR",
+      "decimals": 24,
+      "amount": "4800000000000000000000000",
+      "storageMinimum": "1250000000000000000000"
+    },
+    {
+      "tokenContractId": "wnear.needmore_1_near.testnet",
+      "symbol": "wNEAR",
+      "decimals": 24,
+      "amount": "5000000000000000000000000",
+      "storageMinimum": "1250000000000000000000"
+    },
+    {
+      "tokenContractId": "rnear.needmore_1_near.testnet",
+      "symbol": "rNEAR",
+      "decimals": 24,
+      "amount": "2000000000000000000000000",
+      "storageMinimum": "1250000000000000000000"
+    }
+  ],
+  "cases": [
+    {
+      "id": "bamboo-mist",
+      "contractId": "native-bamboo.needmore_1_near.testnet",
+      "legacyContractId": "bamboo.needmore_1_near.testnet",
+      "nativeFundingYocto": "1606425702811244979919678"
+    },
+    {
+      "id": "dragon-tea",
+      "contractId": "native-dragon.needmore_1_near.testnet",
+      "legacyContractId": "cases-needmore-1-near.testnet",
+      "nativeFundingYocto": "2008032128514056224899598"
+    },
+    {
+      "id": "moon-spirit",
+      "contractId": "native-moon.needmore_1_near.testnet",
+      "legacyContractId": "moon.needmore_1_near.testnet",
+      "nativeFundingYocto": "8032128514056224899598393"
+    },
+    {
+      "id": "phoenix-flame",
+      "contractId": "native-phoenix.needmore_1_near.testnet",
+      "legacyContractId": "phoenix.needmore_1_near.testnet",
+      "nativeFundingYocto": "40160642570281124497991967"
+    },
+    {
+      "id": "uncles-secret-reserve",
+      "contractId": "native-reserve.needmore_1_near.testnet",
+      "legacyContractId": "reserve.needmore_1_near.testnet",
+      "nativeFundingYocto": "48192771084337349397590364"
+    }
+  ],
+  "liveEvidence": "docs/native/evidence/live-deployment.json"
+}

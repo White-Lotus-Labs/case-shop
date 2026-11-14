@@ -1,0 +1,45 @@
+{
+  "network": "ephemeral local NEAR Sandbox; public Testnet reads only",
+  "rustTests": {
+    "passed": 91,
+    "command": "npm run contracts:test",
+    "evidence": "rust-tests.txt"
+  },
+  "typeScriptTests": {
+    "passed": 222,
+    "files": 26,
+    "command": "npm test -- --maxWorkers=2"
+  },
+  "checks": {
+    "backendTypecheck": "passed",
+    "frontendTypecheck": "passed",
+    "backendProductionBuild": "passed",
+    "frontendProductionBuild": "passed",
+    "gitDiffCheck": "passed"
+  },
+  "nativeSandbox": {
+    "cases": 5,
+    "openGasTgas": 150,
+    "retryGasTgas": 100,
+    "evidence": "../../evidence/native-sandbox.json"
+  },
+  "browser": {
+    "acceptanceChecks": 11,
+    "pageErrors": 0,
+    "signedLocalTransactions": 25,
+    "evidence": "browser.json"
+  },
+  "wasmSha256": "173736c8b20a7a02713ff49195ec4001875a1209bd83709701f4418376b8854a",
+  "publicTestnet": {
+    "deployments": 5,
+    "signedTransactions": 70,
+    "nativePoolFundingYocto": "100000000000000000000000000",
+    "evidence": "live-deployment.json",
+    "paidPlayerOpening": "not performed"
+  },
+  "budget": {
+    "limitYocto": "150000000000000000000000000",
+    "nativePoolFundingYocto": "100000000000000000000000000",
+    "maximumConcurrentPrizesPerCase": 4
+  }
+}
