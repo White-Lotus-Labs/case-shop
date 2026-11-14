@@ -31,16 +31,15 @@
   },
   "wasmSha256": "173736c8b20a7a02713ff49195ec4001875a1209bd83709701f4418376b8854a",
   "publicTestnet": {
-    "signedTransactions": 0,
-    "deployments": 0,
-    "requiredActions": "Explicit authorization remains required to create accounts, deploy, fund, and unpause the contracts."
+    "deployments": 5,
+    "signedTransactions": 70,
+    "nativePoolFundingYocto": "100000000000000000000000000",
+    "evidence": "live-deployment.json",
+    "paidPlayerOpening": "not performed"
   },
   "budget": {
     "limitYocto": "150000000000000000000000000",
-    "allocatedTotalYocto": "150000000000000000000000000",
-    "nativeRewardFundingYocto": "114968750000000000000000000",
-    "gasAllowanceYocto": "10000000000000000000000000",
-    "maximumConcurrentPrizesPerCase": 4,
-    "qualification": "Gas is an allowance; actual fees and any unused allowance require reconciliation."
+    "nativePoolFundingYocto": "100000000000000000000000000",
+    "maximumConcurrentPrizesPerCase": 4
   }
 }

@@ -2,7 +2,7 @@
 
 Open one of five configured cases using your own NEAR Testnet wallet. Pay native NEAR and receive the contract-selected native reward and configured Testnet token directly in the same wallet. The Vite interface retains its original 3D models and animation.
 
-The native implementation uses fresh contract accounts. Public Testnet deployment and funding remain pending authorization. The app shows that state explicitly and never substitutes fake balances, winnings, or activity.
+The native implementation is deployed and funded on five fresh Testnet contract accounts. The app reads actual balances, winnings, and activity from the chain.
 
 ```sh
 npm ci

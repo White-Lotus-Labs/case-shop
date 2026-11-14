@@ -15,7 +15,7 @@ describe("native deployment budget", () => {
     ]);
   });
 
-  it("allocates the whole 150 NEAR budget and funds at least four maximum prizes in every case", () => {
+  it("funds pools with exactly 100 NEAR and leaves at least 14 NEAR in the 150 NEAR budget", () => {
     const unit = 10n ** 24n;
     const rounds = BigInt(manifest.reservedConcurrentOpenings);
     expect(rounds).toBe(4n);
@@ -24,7 +24,7 @@ describe("native deployment budget", () => {
       0n,
     );
     expect(BigInt(manifest.nativeRewardFundingYocto)).toBe(requiredRewards);
-    expect(requiredRewards).toBe(114_968_750_000_000_000_000_000_000n);
+    expect(requiredRewards).toBe(100n * unit);
     for (const entry of registry.cases) {
       const planned = manifest.cases.find((row) => row.id === entry.id);
       if (!planned) throw new Error(`Missing funding for ${entry.id}`);
@@ -53,7 +53,7 @@ describe("native deployment budget", () => {
     expect(BigInt(manifest.gasAllowanceYocto)).toBe(10n * unit);
     expect(BigInt(manifest.budgetEstimateYocto)).toBe(budget);
     expect(BigInt(manifest.budgetLimitYocto)).toBe(150n * unit);
-    expect(budget).toBe(150n * unit);
+    expect(budget).toBeLessThanOrEqual(136n * unit);
   });
 
   it("prepares the same pool transfers and four token rewards that appear in the manifest", () => {

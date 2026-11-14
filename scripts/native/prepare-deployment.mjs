@@ -6,6 +6,8 @@ import { baseEncode } from "near-api-js";
 const registry = JSON.parse(
   await readFile("config/cases.native.testnet.json", "utf8"),
 );
+if (registry.cases.some((entry) => entry.deploymentStatus === "verified-live"))
+  throw new Error("The configured native accounts are already live; use fresh accounts for a new deployment.");
 const output = resolve("docs/native/deployment");
 const wasmPath =
   "contracts/target/wasm32-unknown-unknown/release/near_native_case_pool.wasm";
@@ -33,7 +35,7 @@ const tokenStorage = registry.cases
     (sum, reward) => sum + BigInt(tokenMinima.get(reward.token_contract_id)),
     0n,
   );
-const poolBudget = maxBudget - fundedAccounts - gasAllowance - tokenStorage;
+const poolBudget = 100n * near;
 const maximumRewards = registry.cases.map(
   (entry) => BigInt(entry.config.economy.rewards[2]) * scale,
 );

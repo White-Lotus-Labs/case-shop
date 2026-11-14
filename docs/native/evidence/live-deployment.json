@@ -1,0 +1,327 @@
+{
+  "network": "testnet",
+  "budgetLimit": "150",
+  "minimumBudgetRetained": "14",
+  "authorizedPoolFunding": "100000000000000000000000000",
+  "transactions": [
+    {
+      "step": "create bamboo-mist",
+      "hash": "NinfH3JwZroe3WNnpZjygjQWuQy35cJB4cAZqyGyGMi"
+    },
+    {
+      "step": "deploy bamboo-mist",
+      "hash": null
+    },
+    {
+      "step": "fund NEAR bamboo-mist",
+      "hash": null
+    },
+    {
+      "step": "register bamboo-mist SHITZU",
+      "hash": null
+    },
+    {
+      "step": "fund bamboo-mist SHITZU",
+      "hash": null
+    },
+    {
+      "step": "register bamboo-mist BLACKDRAGON",
+      "hash": null
+    },
+    {
+      "step": "fund bamboo-mist BLACKDRAGON",
+      "hash": null
+    },
+    {
+      "step": "register bamboo-mist NEKO",
+      "hash": null
+    },
+    {
+      "step": "fund bamboo-mist NEKO",
+      "hash": null
+    },
+    {
+      "step": "register bamboo-mist RHEA",
+      "hash": null
+    },
+    {
+      "step": "fund bamboo-mist RHEA",
+      "hash": null
+    },
+    {
+      "step": "unpause bamboo-mist",
+      "hash": null
+    },
+    {
+      "step": "create dragon-tea",
+      "hash": null
+    },
+    {
+      "step": "deploy dragon-tea",
+      "hash": null
+    },
+    {
+      "step": "fund NEAR dragon-tea",
+      "hash": null
+    },
+    {
+      "step": "register dragon-tea SHITZU",
+      "hash": null
+    },
+    {
+      "step": "fund dragon-tea SHITZU",
+      "hash": null
+    },
+    {
+      "step": "register dragon-tea RHEA",
+      "hash": null
+    },
+    {
+      "step": "fund dragon-tea RHEA",
+      "hash": null
+    },
+    {
+      "step": "register dragon-tea AURORA",
+      "hash": null
+    },
+    {
+      "step": "fund dragon-tea AURORA",
+      "hash": "BeQBe4ykzvWQW9bysG8R1f9tsCR3WWkbKvXThK3iWSyn"
+    },
+    {
+      "step": "unpause dragon-tea",
+      "hash": "82hTKpgRe2ZWrAbvHwCqWjkTHZ2Bk6fGB8aFm5kCcmBA"
+    },
+    {
+      "step": "create moon-spirit",
+      "hash": "8q8CxSL7Ues2p9uGT6n3Hk6Ym2X7fimwoETzhfcgVbTP"
+    },
+    {
+      "step": "deploy moon-spirit",
+      "hash": "BkyLmzMv9bwQc41VN7wdMTsLgS7EED3SWvSq5viuqoEN"
+    },
+    {
+      "step": "fund NEAR moon-spirit",
+      "hash": "A2qwugsZsdhenHHNsWtkjpaAf7zwmXMX8PgxrQ7nSvPF"
+    },
+    {
+      "step": "register moon-spirit PURGE",
+      "hash": "nLs917oseyf4g87s4qAkrRANp61cjMCQqWpxMYU44g2"
+    },
+    {
+      "step": "fund moon-spirit PURGE",
+      "hash": "J54565rWEMYv2Bn8Gyiz9XVE4wPKDW3L2xYy8VTFDsVg"
+    },
+    {
+      "step": "register moon-spirit GEAR",
+      "hash": "FNVDEiQwPd91uP5KghcP2YPTx7oF3yUvFoB9PEzbFKp8"
+    },
+    {
+      "step": "fund moon-spirit GEAR",
+      "hash": "G8BF8BmQB2qdTaiUNZC62Sjy1xAZyx4hBuWZD4qHjip7"
+    },
+    {
+      "step": "register moon-spirit NEKO",
+      "hash": "2jNECGP4PZktKApB1AJfZ9ECeyLere3rTrZf2FDPsTzG"
+    },
+    {
+      "step": "fund moon-spirit NEKO",
+      "hash": "3ngdNvaV1dqjhaTV1o9CSQqEmptfYW59NonNsM1jdUqH"
+    },
+    {
+      "step": "register moon-spirit mpDAO",
+      "hash": "7kHXEbwgNj9fBMXbhmqZUXwV9hxsxATdkScZwpeJ8Rma"
+    },
+    {
+      "step": "fund moon-spirit mpDAO",
+      "hash": "Be7C9d4juXjiecDAUkatgQ3U7BaJdAcoCKoUa42ugtQi"
+    },
+    {
+      "step": "register moon-spirit STNEAR",
+      "hash": "8kJk2AheDGYQHP4X5wNindxnMeaq1nWPXWDuu6vTaexC"
+    },
+    {
+      "step": "fund moon-spirit STNEAR",
+      "hash": "CRc4VBHfQ7DkRTGQuTQ7PHnHg8MgnFoEXfCRxVCYEdBt"
+    },
+    {
+      "step": "unpause moon-spirit",
+      "hash": "3pyYdCMQukZUUFTGE5XkLzHiD29cTuKHQpWEvdY8RMsW"
+    },
+    {
+      "step": "create phoenix-flame",
+      "hash": "FwsQsGu8pXJ7wJh4NXyyKW9nbmyShoPxkgciaUAbCP7a"
+    },
+    {
+      "step": "deploy phoenix-flame",
+      "hash": "66zjaeX14tktsKgAmsV46mFs8kFmQ52Uouey82C6DcqV"
+    },
+    {
+      "step": "fund NEAR phoenix-flame",
+      "hash": "4uruWFhdC684CVXjWgL8LAdcuLm1qJ4cvMpXLrWcGzdv"
+    },
+    {
+      "step": "register phoenix-flame RHEA",
+      "hash": "GVob1MV8oFtnwfiSSRsmXr5hbpX3zx8winZxeqkJhjcS"
+    },
+    {
+      "step": "fund phoenix-flame RHEA",
+      "hash": "98P1sb4ieUvStfvNvcW9oJCrqeU6iZtY16BTr15EhcxV"
+    },
+    {
+      "step": "register phoenix-flame AURORA",
+      "hash": "7mU6NtqSf55JrsKrkX3mAkss5wawBY7U6svhnxFjo8HK"
+    },
+    {
+      "step": "fund phoenix-flame AURORA",
+      "hash": "A6g2hDMdYW17DYih5aTRghddxZ1o9zNMev1cCRdTp1uY"
+    },
+    {
+      "step": "register phoenix-flame mpDAO",
+      "hash": "5uWCXJKFMATSjufqEczrRmxv1zYHnhpAs2wAvWosh9iV"
+    },
+    {
+      "step": "fund phoenix-flame mpDAO",
+      "hash": "ZEqyfFfhop8XKvpmwoXq6qWSG6jaBLNbXndq2Am5f3j"
+    },
+    {
+      "step": "register phoenix-flame LINEAR",
+      "hash": "H5SrN3wWaZ6hxTHrAq2VwCPcoJZa43Dy19sLrmAHjBZB"
+    },
+    {
+      "step": "fund phoenix-flame LINEAR",
+      "hash": "8d4M9ijfAo68VJHamJd2359zJdGZTXrkRZ3unyvg7Zjg"
+    },
+    {
+      "step": "register phoenix-flame STNEAR",
+      "hash": "GP2yQ59V5bbrF23a9JhwHZg8eU2PayqEsKR4CYFtgGf5"
+    },
+    {
+      "step": "fund phoenix-flame STNEAR",
+      "hash": "5c9NUQjhVE2UsQSXMYpkEjwETuy2JPWa63eB7PnP23Zm"
+    },
+    {
+      "step": "register phoenix-flame wNEAR",
+      "hash": "D1UM4nwrM3m3YMFe2Crj8bdBTgfS6RAX3gixYtP3s5tp"
+    },
+    {
+      "step": "fund phoenix-flame wNEAR",
+      "hash": "4VLsefNB74yq4pjcLrDRjkZNbj8tTEDJBM7WiFZ4j27U"
+    },
+    {
+      "step": "unpause phoenix-flame",
+      "hash": "D72WEjwDzXYm28f5rnXwKxFf2d9MY1LycGeRFJSigozU"
+    },
+    {
+      "step": "create uncles-secret-reserve",
+      "hash": "64LcxiB2QLdEVYWVTeaDgL5jtChjpiQkeg2wttpDhD9Z"
+    },
+    {
+      "step": "deploy uncles-secret-reserve",
+      "hash": "4e7xFpPN6bD2g359msetkSbnQEa3MJEfXc2Y3hahZodK"
+    },
+    {
+      "step": "fund NEAR uncles-secret-reserve",
+      "hash": "7ETUL1VMA2BJYfQ3awUXvvs12KpMdJ9dRKS9nhpYXyT3"
+    },
+    {
+      "step": "register uncles-secret-reserve RHEA",
+      "hash": "GiWA84MZsBZXAZWz31EM7r1T6bCfCmMVRF3ZdFoLgmrg"
+    },
+    {
+      "step": "fund uncles-secret-reserve RHEA",
+      "hash": "HmxyFmfRiEniKk4cC32LZ8KF9K4BnJxBs64DYfi82aoy"
+    },
+    {
+      "step": "register uncles-secret-reserve AURORA",
+      "hash": "9SBw6MLZM9EF5z7e7BjmT4YbR7hp2p8g94kJyxhuTvAw"
+    },
+    {
+      "step": "fund uncles-secret-reserve AURORA",
+      "hash": "jmzevXwqM5dMsb7c2NDm9tCjRd48icQy9DNiEfo1jWu"
+    },
+    {
+      "step": "register uncles-secret-reserve mpDAO",
+      "hash": "8U6Mm671j79XPEZFv5tN3iKk8wBLJJGDzK2k1TTgBQeZ"
+    },
+    {
+      "step": "fund uncles-secret-reserve mpDAO",
+      "hash": "53sxXS81UPrr8DwSnmqjHsg5Ya421VCsbt55WADrScuC"
+    },
+    {
+      "step": "register uncles-secret-reserve rNEAR",
+      "hash": "9iqdeK6oZmmgtB9kkzRKLkYhkuHV16bPYdASZmZftXKn"
+    },
+    {
+      "step": "fund uncles-secret-reserve rNEAR",
+      "hash": "D2hBXLRgdBb5zrX7uNb1fP5NFuNVBxa98Ee6YSiBgZUQ"
+    },
+    {
+      "step": "register uncles-secret-reserve STNEAR",
+      "hash": "Fx4DrcUQN8iqN4JpgwbZKAxqFeUpZRxF8FuQJuZ61vBf"
+    },
+    {
+      "step": "fund uncles-secret-reserve STNEAR",
+      "hash": "3MZzD91Lkpnv56bVLmvrD47ctoRwWP8C7RzGqTqYqdy9"
+    },
+    {
+      "step": "register uncles-secret-reserve LINEAR",
+      "hash": "A1bDACDRj6SJBBuTbUqN54H7e5MqxLdfwkxemRug86EQ"
+    },
+    {
+      "step": "fund uncles-secret-reserve LINEAR",
+      "hash": "F6fQo7bKweakGm6Zd7A5ytz4Kpd5mdVWaBgdbwjAguhL"
+    },
+    {
+      "step": "register uncles-secret-reserve wNEAR",
+      "hash": "9Bx1cqdi8unQXibFYuUv38RTtD88vKNYepcSLrUA6N32"
+    },
+    {
+      "step": "fund uncles-secret-reserve wNEAR",
+      "hash": "Fz49sWkmb6cNxUaTb3MjVmtjwYbdZiSSH9UL25EKMjmp"
+    },
+    {
+      "step": "unpause uncles-secret-reserve",
+      "hash": "2ZWKX1CudXNZUqEkwSFuM2u6zLah4BZTTgynKXpWcUmy"
+    }
+  ],
+  "cases": [
+    {
+      "id": "bamboo-mist",
+      "contractId": "native-bamboo.needmore_1_near.testnet",
+      "codeHash": "2ZdD6hPhuYnZytCyhPcdxCNhWV4gbXcQHfDz3KbfionR",
+      "pool": "1606425702811244979919678",
+      "ready": true
+    },
+    {
+      "id": "dragon-tea",
+      "contractId": "native-dragon.needmore_1_near.testnet",
+      "codeHash": "2ZdD6hPhuYnZytCyhPcdxCNhWV4gbXcQHfDz3KbfionR",
+      "pool": "2008032128514056224899598",
+      "ready": true
+    },
+    {
+      "id": "moon-spirit",
+      "contractId": "native-moon.needmore_1_near.testnet",
+      "codeHash": "2ZdD6hPhuYnZytCyhPcdxCNhWV4gbXcQHfDz3KbfionR",
+      "pool": "8032128514056224899598393",
+      "ready": true
+    },
+    {
+      "id": "phoenix-flame",
+      "contractId": "native-phoenix.needmore_1_near.testnet",
+      "codeHash": "2ZdD6hPhuYnZytCyhPcdxCNhWV4gbXcQHfDz3KbfionR",
+      "pool": "40160642570281124497991967",
+      "ready": true
+    },
+    {
+      "id": "uncles-secret-reserve",
+      "contractId": "native-reserve.needmore_1_near.testnet",
+      "codeHash": "2ZdD6hPhuYnZytCyhPcdxCNhWV4gbXcQHfDz3KbfionR",
+      "pool": "48192771084337349397590364",
+      "ready": true
+    }
+  ],
+  "ownerBalanceAfter": "60903566803831022399199930",
+  "remainingAboveRequired": "10911072151760588999999970"
+}

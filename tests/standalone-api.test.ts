@@ -12,7 +12,7 @@ it("exposes the configured Testnet catalog without inventing balances", async ()
   expect(
     data.cases.every(
       (item: { deploymentStatus: string }) =>
-        item.deploymentStatus === "planned",
+        item.deploymentStatus === "verified-live",
     ),
   ).toBe(true);
   expect(

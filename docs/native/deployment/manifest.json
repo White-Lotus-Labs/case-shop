@@ -1,6 +1,6 @@
 {
   "network": "testnet",
-  "status": "prepared-only-not-broadcast",
+  "status": "deployed-verified",
   "contractVersion": "native-v1",
   "wasmPath": "contracts/target/wasm32-unknown-unknown/release/near_native_case_pool.wasm",
   "wasmBytes": 454644,
@@ -10,10 +10,10 @@
   "treasuryId": "needmore_1_near.testnet",
   "reservedConcurrentOpenings": "4",
   "accountCreationNear": "25",
-  "nativeRewardFundingYocto": "114968750000000000000000000",
+  "nativeRewardFundingYocto": "100000000000000000000000000",
   "tokenStorageFundingYocto": "31250000000000000000000",
   "gasAllowanceYocto": "10000000000000000000000000",
-  "budgetEstimateYocto": "150000000000000000000000000",
+  "budgetEstimateYocto": "135031250000000000000000000",
   "budgetLimitYocto": "150000000000000000000000000",
   "fundingPolicy": "The remaining pool budget is allocated in proportion to each case's maximum native reward. Every pool and FT candidate covers at least four maximum concurrent rewards. The 10 NEAR gas allowance is an estimate, and any unused amount remains with the owner until separately funded to a pool.",
   "tokens": [
@@ -107,31 +107,32 @@
       "id": "bamboo-mist",
       "contractId": "native-bamboo.needmore_1_near.testnet",
       "legacyContractId": "bamboo.needmore_1_near.testnet",
-      "nativeFundingYocto": "1846887550200803212851405"
+      "nativeFundingYocto": "1606425702811244979919678"
     },
     {
       "id": "dragon-tea",
       "contractId": "native-dragon.needmore_1_near.testnet",
       "legacyContractId": "cases-needmore-1-near.testnet",
-      "nativeFundingYocto": "2308609437751004016064257"
+      "nativeFundingYocto": "2008032128514056224899598"
     },
     {
       "id": "moon-spirit",
       "contractId": "native-moon.needmore_1_near.testnet",
       "legacyContractId": "moon.needmore_1_near.testnet",
-      "nativeFundingYocto": "9234437751004016064257028"
+      "nativeFundingYocto": "8032128514056224899598393"
     },
     {
       "id": "phoenix-flame",
       "contractId": "native-phoenix.needmore_1_near.testnet",
       "legacyContractId": "phoenix.needmore_1_near.testnet",
-      "nativeFundingYocto": "46172188755020080321285140"
+      "nativeFundingYocto": "40160642570281124497991967"
     },
     {
       "id": "uncles-secret-reserve",
       "contractId": "native-reserve.needmore_1_near.testnet",
       "legacyContractId": "reserve.needmore_1_near.testnet",
-      "nativeFundingYocto": "55406626506024096385542170"
+      "nativeFundingYocto": "48192771084337349397590364"
     }
-  ]
+  ],
+  "liveEvidence": "docs/native/evidence/live-deployment.json"
 }

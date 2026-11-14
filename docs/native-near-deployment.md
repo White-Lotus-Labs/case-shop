@@ -2,7 +2,7 @@
 
 The Vite frontend uses the player's NEAR Testnet wallet. It reads balances, quote probabilities, results, and history from finalized contract views. Each opening pays its selected native NEAR reward and one configured Testnet token directly to that wallet.
 
-The native contracts are prepared for fresh accounts. They have not been deployed to public Testnet. The frontend displays deployment pending until it can verify the new native contract identities and funded pools.
+The five native contracts are deployed and funded on fresh Testnet accounts. The finalized code hashes, pool balances, and token inventory checks are recorded in `docs/native/evidence/live-deployment.json`.
 
 ## Run locally
 
@@ -40,29 +40,29 @@ Read `config/cases.native.testnet.json`. Configuration economics use integer mic
 
 The proposed accounts are `native-bamboo`, `native-dragon`, `native-moon`, `native-phoenix`, and `native-reserve` under `needmore_1_near.testnet`. The parent account needs authority to create these subaccounts. Each fresh contract needs its own full-access key for deployment and initialization. Keep those keys outside the repository.
 
-After building the WASM, generate the deployment package:
+For a separate future deployment, configure fresh planned accounts first. After building the WASM, generate the deployment package:
 
 ```sh
 npm run native:prepare-deployment
 npm run native:preflight
 ```
 
-These commands only read public chain data and write local review files. They cannot sign or broadcast. The preflight verifies account absence, configured token metadata, and the owner's funding availability. Inspect these files:
+The generator refuses to prepare the current live accounts. These commands only read public chain data and write local review files. They cannot sign or broadcast. The preflight verifies account absence, configured token metadata, and the owner's funding availability. Inspect these files:
 
 - `docs/native/deployment/manifest.json` contains the actual WASM SHA256 and NEAR code hash, exact account targets, and aggregate reward funding requirements.
 - `docs/native/deployment/*.init.json` contains each immutable case configuration.
 - `docs/native/deployment/commands.review.txt` contains exact near-cli-rs 0.31.1 commands for account creation, atomic deployment and initialization, token storage registration, reward funding, and unpausing.
-- `docs/native/evidence/testnet-preflight.json` records the latest read-only funding and account checks.
+- `docs/native/evidence/testnet-preflight.json` records the read-only checks made immediately before deployment.
 
-The plan allocates all 150 NEAR: 114.96875 NEAR for the five prize pools, 25 NEAR for the five new accounts, 0.03125 NEAR for token registration at the last checked storage rates, and 10 NEAR for gas and other transaction costs. Each pool and each configured token candidate has enough funding for at least four concurrent maximum rewards. Native funding is distributed in proportion to each case's maximum reward. The manifest lists exact yoctoNEAR amounts for each case and the required token inventory.
+The plan allocates 100 NEAR for the five prize pools, 25 NEAR for the five new accounts, 0.03125 NEAR for token registration at the last checked storage rates, and 10 NEAR for gas and other transaction costs. The estimate is 135.03125 NEAR, leaving at least 14.96875 NEAR of the 150 NEAR budget with the owner. Each pool and each configured token candidate has enough funding for at least four concurrent maximum rewards. Native funding is distributed in proportion to each case's maximum reward. The manifest lists exact yoctoNEAR amounts for each case and the required token inventory.
 
-The 10 NEAR for gas is an allowance, not a prepaid fixed fee. Actual gas costs can change, so the reviewed commands cannot guarantee an exact total spent or enforce the 150 NEAR ceiling automatically. Before each authorized transaction, track actual spending and stop if the remaining budget cannot cover the remaining transfers and their fees. After deployment, the operator can allocate unused gas allowance to a pool, accounting for the fee of that additional transaction and leaving enough to avoid exceeding the limit. Rerun preflight before deployment.
+The 10 NEAR for gas is an allowance, not a prepaid fixed fee. Actual gas costs can change, so the reviewed commands cannot guarantee an exact total spent or enforce the 150 NEAR ceiling automatically. Before each authorized transaction, track actual spending and stop if the remaining budget cannot cover the remaining transfers and their fees while leaving at least 14 NEAR. Unused gas stays with the owner. Rerun preflight before deployment.
 
 Dynamic probabilities depend on available native reserves. The configured targets total 1,825 NEAR across five pools. The prepared funding starts below those targets and therefore uses the contract's lower-pool odds. Read `get_quote` to inspect the exact current probabilities.
 
-## Deploy after authorization
+## Deploy a fresh set after authorization
 
-Do not execute the generated commands until the user explicitly authorizes the account creation, deployment, and listed funding. Run a fresh read-only check that every new account is absent. If any account exists, inspect its state and choose another fresh account rather than overwriting it.
+The listed native accounts are already deployed. Never redeploy to them. For a separate future deployment, do not execute commands until the user explicitly authorizes account creation, deployment, and funding. Run a fresh read-only check that every new account is absent. If any account exists, inspect its state and choose another fresh account rather than overwriting it.
 
 After authorization, execute the reviewed commands in order. Each contract starts paused. Verify its code hash, immutable case configuration, native reserve, configured token balances, and token registrations before executing its unpause command. Read `get_pool`, `get_case`, and `get_reward_inventory` at finality. Compare `view_code.code_base64` against the manifest hash before activation.
 

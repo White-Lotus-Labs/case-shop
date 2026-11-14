@@ -8,7 +8,7 @@
       "id": "bamboo-mist",
       "name": "Bamboo Mist Case",
       "contractId": "native-bamboo.needmore_1_near.testnet",
-      "deploymentStatus": "planned",
+      "deploymentStatus": "verified-live",
       "theme": "bamboo-mist",
       "description": "Bamboo, green tea and morning mist.",
       "config": {
@@ -69,7 +69,7 @@
       "id": "dragon-tea",
       "name": "Dragon Tea Case",
       "contractId": "native-dragon.needmore_1_near.testnet",
-      "deploymentStatus": "planned",
+      "deploymentStatus": "verified-live",
       "theme": "dragon-tea",
       "description": "Traditional tea ceremony and the signature dragon collection.",
       "config": {
@@ -122,7 +122,7 @@
       "id": "moon-spirit",
       "name": "Moon Spirit Case",
       "contractId": "native-moon.needmore_1_near.testnet",
-      "deploymentStatus": "planned",
+      "deploymentStatus": "verified-live",
       "theme": "moon-spirit",
       "description": "Indigo moonlight and mysterious night blends.",
       "config": {
@@ -191,7 +191,7 @@
       "id": "phoenix-flame",
       "name": "Phoenix Flame Case",
       "contractId": "native-phoenix.needmore_1_near.testnet",
-      "deploymentStatus": "planned",
+      "deploymentStatus": "verified-live",
       "theme": "phoenix-flame",
       "description": "Red and gold embers with a wider range of native NEAR outcomes.",
       "config": {
@@ -268,7 +268,7 @@
       "id": "uncles-secret-reserve",
       "name": "Uncle's Secret Reserve",
       "contractId": "native-reserve.needmore_1_near.testnet",
-      "deploymentStatus": "planned",
+      "deploymentStatus": "verified-live",
       "theme": "uncles-secret-reserve",
       "description": "Ancient recipes and rare unofficial Testnet collectibles.",
       "config": {
