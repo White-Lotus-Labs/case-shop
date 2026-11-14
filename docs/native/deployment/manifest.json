@@ -10,7 +10,11 @@
   "treasuryId": "needmore_1_near.testnet",
   "reservedConcurrentOpenings": "2",
   "accountCreationNear": "25",
-  "nativeRewardFundingYocto": "498000000000000000000000000",
+  "nativeRewardFundingYocto": "49800000000000000000000000",
+  "tokenStorageFundingYocto": "31250000000000000000000",
+  "gasAllowanceYocto": "10000000000000000000000000",
+  "budgetEstimateYocto": "84831250000000000000000000",
+  "budgetLimitYocto": "150000000000000000000000000",
   "fundingPolicy": "Two maximum native rewards per case and two of every configured FT candidate. Gas and FT storage are additional. Dynamic odds depend on remaining pool funds.",
   "tokens": [
     {

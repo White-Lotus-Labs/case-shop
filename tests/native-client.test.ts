@@ -157,11 +157,11 @@ function pending(): NativePending {
 describe("native NEAR client", () => {
   it("converts original microNEAR case economics to exact yoctoNEAR without USD values", () => {
     expect(nativeCaseCatalog.map((entry) => entry.price)).toEqual([
+      "50000000000000000000000",
+      "100000000000000000000000",
+      "200000000000000000000000",
       "500000000000000000000000",
       "1000000000000000000000000",
-      "2000000000000000000000000",
-      "5000000000000000000000000",
-      "10000000000000000000000000",
     ]);
     expect(
       nativeCaseCatalog.every((entry) =>

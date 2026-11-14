@@ -41,10 +41,30 @@ const owner = await rpc({
   account_id: registry.ownerId,
   finality: "final",
 });
+const protocol = await rpc(
+  { finality: "final" },
+  "EXPERIMENTAL_protocol_config",
+);
+if (
+  !owner.result ||
+  !protocol.result ||
+  !Number.isSafeInteger(owner.result.storage_usage) ||
+  owner.result.storage_usage < 0
+)
+  throw new Error("Cannot determine the owner's spendable NEAR balance.");
+const storageCost =
+  BigInt(owner.result.storage_usage) *
+  BigInt(integer(protocol.result.runtime_config?.storage_amount_per_byte));
+const locked = BigInt(integer(owner.result.locked));
+const storageFromLiquid = storageCost > locked ? storageCost - locked : 0n;
+const liquid = BigInt(integer(owner.result.amount));
+const spendable = liquid > storageFromLiquid ? liquid - storageFromLiquid : 0n;
 const nativeRequired =
   BigInt(manifest.nativeRewardFundingYocto) +
-  BigInt(manifest.accountCreationNear) * 10n ** 24n;
-if (!owner.result || BigInt(integer(owner.result.amount)) < nativeRequired)
+  BigInt(manifest.accountCreationNear) * 10n ** 24n +
+  BigInt(manifest.tokenStorageFundingYocto) +
+  BigInt(manifest.gasAllowanceYocto);
+if (spendable < nativeRequired)
   blockers.push(
     "Owner needs additional NEAR for the prepared account and prize funding, plus storage and gas.",
   );
@@ -88,6 +108,10 @@ const report = {
   owner: {
     accountId: registry.ownerId,
     balance: owner.result?.amount ?? null,
+    spendable: String(spendable),
+    additionalRequiredYocto: String(
+      nativeRequired > spendable ? nativeRequired - spendable : 0n,
+    ),
     minimumNativeFundingYocto: String(nativeRequired),
   },
   tokens,
@@ -119,14 +143,14 @@ function integer(value) {
     throw new Error("Invalid RPC amount.");
   return value;
 }
-async function rpc(params) {
+async function rpc(params, method = "query") {
   const response = await fetch(registry.rpcUrl, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
       jsonrpc: "2.0",
       id: "native-preflight-readonly",
-      method: "query",
+      method,
       params,
     }),
     signal: AbortSignal.timeout(15000),

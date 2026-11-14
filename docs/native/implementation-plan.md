@@ -6,7 +6,7 @@ The requested branch starts at `36ffbb3283656e6207e5d312653bc048ca7df53b` with n
 
 Deploy a new `native-case-pool` crate to five fresh accounts. Preserve the legacy contracts, deployment registry, state encodings, and recovery modules. In-place upgrades would mix historical USDI obligations with native NEAR accounting, so they are excluded.
 
-The new registry declares `microNEAR` configuration units. Multiply these integers by `10^18` at the contract boundary. Public prices, reserves, deposits, and native rewards use yoctoNEAR. The five purchase prices are 0.5, 1, 2, 5, and 10 NEAR. Preserve the existing economy's native reward ratios and dynamic tier probabilities. Every opening also selects a configured Testnet reward token within its tier.
+The new registry declares `microNEAR` configuration units. Multiply these integers by `10^18` at the contract boundary. Public prices, reserves, deposits, and native rewards use yoctoNEAR. The five purchase prices are 0.05, 0.1, 0.2, 0.5, and 1 NEAR. Preserve the existing economy's native reward ratios and dynamic tier probabilities. Every opening also selects a configured Testnet reward token within its tier.
 
 Reserve the maximum native reward and every possible token candidate before accepting payment. Release unselected reserves after the chain selects the result. Transfer payouts directly to the signer. Track each transfer leg separately so retries never pay a successful leg twice.
 

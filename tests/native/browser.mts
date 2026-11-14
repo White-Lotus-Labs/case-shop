@@ -263,7 +263,7 @@ try {
   await page.getByRole("radio", { name: /Bamboo Mist/ }).click();
   loseNextResponse = true;
   await page
-    .getByRole("button", { name: "Open for 0.5 NEAR", exact: true })
+    .getByRole("button", { name: "Open for 0.05 NEAR", exact: true })
     .click({ timeout: 30000 });
   await page
     .getByText("Wallet response lost after local chain acceptance", {
@@ -313,7 +313,7 @@ try {
   await page.keyboard.press("Escape");
   unregisterBeforeNextOpen = true;
   await page
-    .getByRole("button", { name: "Open for 0.5 NEAR", exact: true })
+    .getByRole("button", { name: "Open for 0.05 NEAR", exact: true })
     .click({ timeout: 30000 });
   await page
     .getByRole("button", { name: "Retry reward payout", exact: true })

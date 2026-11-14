@@ -5,13 +5,13 @@
     "case_id": "moon-spirit",
     "name": "Moon Spirit Case",
     "economy": {
-      "price": "2000000",
+      "price": "200000",
       "rewards": [
-        "100000",
-        "2000000",
-        "20000000"
+        "10000",
+        "200000",
+        "2000000"
       ],
-      "target": "2000000000",
+      "target": "200000000",
       "ev_low_bps": 5000,
       "ev_high_bps": 16000,
       "legendary_low_ppm": 5000,

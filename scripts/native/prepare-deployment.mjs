@@ -13,6 +13,9 @@ const wasm = await readFile(wasmPath);
 const digest = createHash("sha256").update(wasm).digest();
 const rounds = 2n;
 const scale = 10n ** 18n;
+const near = 10n ** 24n;
+const maxBudget = 150n * near;
+const gasAllowance = 10n * near;
 const quote = (value) => `'${String(value).replaceAll("'", "'\\''")}'`;
 const command = (args) => args.map(quote).join(" ");
 const tx = (contract, method, args, deposit, gas = "100 Tgas") =>
@@ -47,6 +50,7 @@ const lines = [
 ];
 const tokenRequirements = new Map();
 let nearFunding = 0n;
+let tokenStorage = 0n;
 for (const entry of registry.cases) {
   if (
     !entry.contractId.startsWith("native-") ||
@@ -111,6 +115,7 @@ for (const entry of registry.cases) {
   for (const reward of entry.config.bonus_rewards) {
     const amount = BigInt(reward.amount) * rounds;
     const min = await storageMinimum(reward.token_contract_id);
+    tokenStorage += BigInt(min);
     lines.push(
       tx(
         reward.token_contract_id,
@@ -154,7 +159,17 @@ for (const entry of registry.cases) {
     "",
   );
 }
-await writeFile(`${output}/commands.review.txt`, lines.join("\n").trimEnd() + "\n");
+const fundedAccounts = 25n * near;
+const estimatedTotal =
+  fundedAccounts + nearFunding + tokenStorage + gasAllowance;
+if (estimatedTotal > maxBudget)
+  throw new Error(
+    "Prepared deployment exceeds the 150 NEAR budget, including storage and gas allowance.",
+  );
+await writeFile(
+  `${output}/commands.review.txt`,
+  lines.join("\n").trimEnd() + "\n",
+);
 await writeFile(
   `${output}/manifest.json`,
   JSON.stringify(
@@ -171,6 +186,10 @@ await writeFile(
       reservedConcurrentOpenings: String(rounds),
       accountCreationNear: "25",
       nativeRewardFundingYocto: String(nearFunding),
+      tokenStorageFundingYocto: String(tokenStorage),
+      gasAllowanceYocto: String(gasAllowance),
+      budgetEstimateYocto: String(estimatedTotal),
+      budgetLimitYocto: String(maxBudget),
       fundingPolicy:
         "Two maximum native rewards per case and two of every configured FT candidate. Gas and FT storage are additional. Dynamic odds depend on remaining pool funds.",
       tokens: [...tokenRequirements.values()],

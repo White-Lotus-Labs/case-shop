@@ -5,13 +5,13 @@
     "case_id": "dragon-tea",
     "name": "Dragon Tea Case",
     "economy": {
-      "price": "1000000",
+      "price": "100000",
       "rewards": [
+        "10000",
         "100000",
-        "1000000",
-        "5000000"
+        "500000"
       ],
-      "target": "1000000000",
+      "target": "100000000",
       "ev_low_bps": 6000,
       "ev_high_bps": 14000,
       "legendary_low_ppm": 10000,

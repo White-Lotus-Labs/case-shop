@@ -36,7 +36,7 @@ Install the browser once with `npx playwright install chromium`. You can select 
 
 ## Review deployment requirements
 
-Read `config/cases.native.testnet.json`. Configuration economics use integer microNEAR. Public views, wallet deposits, and accounting use yoctoNEAR. Prices are 0.5, 1, 2, 5, and 10 NEAR. All configured tokens are Testnet collectibles with no monetary value.
+Read `config/cases.native.testnet.json`. Configuration economics use integer microNEAR. Public views, wallet deposits, and accounting use yoctoNEAR. Prices are 0.05, 0.1, 0.2, 0.5, and 1 NEAR. All configured tokens are Testnet collectibles with no monetary value.
 
 The proposed accounts are `native-bamboo`, `native-dragon`, `native-moon`, `native-phoenix`, and `native-reserve` under `needmore_1_near.testnet`. The parent account needs authority to create these subaccounts. Each fresh contract needs its own full-access key for deployment and initialization. Keep those keys outside the repository.
 
@@ -54,9 +54,9 @@ These commands only read public chain data and write local review files. They ca
 - `docs/native/deployment/commands.review.txt` contains exact near-cli-rs 0.31.1 commands for account creation, atomic deployment and initialization, token storage registration, reward funding, and unpausing.
 - `docs/native/evidence/testnet-preflight.json` records the latest read-only funding and account checks.
 
-The generated example funds two maximum native rewards per case, totaling 498 NEAR. It allocates another 25 NEAR to the five new contract accounts for code storage and gas. Token storage deposits, transaction gas, and configured token inventories are additional. The manifest lists every token amount and its queried storage minimum. This reserve supports two simultaneous maximum rewards per case, not an unlimited number of future openings. Replenish depleted pools and token inventories through the owner or treasury wallet.
+The prepared deployment funds two maximum native rewards per case, totaling 49.8 NEAR. It allocates 25 NEAR to the five new contract accounts, 0.03125 NEAR to token registration at the last checked storage rates, and a 10 NEAR allowance for gas and other transaction costs. The estimated total is 84.83125 NEAR, leaving 65.16875 NEAR under the 150 NEAR budget. Gas is an allowance, not a guaranteed fee; rerun preflight before deployment. The manifest lists the required token inventory and current storage minimum. Replenish depleted pools and token inventories through the owner or treasury wallet.
 
-Dynamic probabilities depend on available native reserves. The configured targets total 18,250 NEAR across five pools. The smaller example funding starts below those targets and therefore uses the contract's lower-pool odds. Read `get_quote` to inspect the exact current probabilities.
+Dynamic probabilities depend on available native reserves. The configured targets total 1,825 NEAR across five pools. The prepared funding starts below those targets and therefore uses the contract's lower-pool odds. Read `get_quote` to inspect the exact current probabilities.
 
 ## Deploy after authorization
 

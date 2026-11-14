@@ -5,13 +5,13 @@
     "case_id": "phoenix-flame",
     "name": "Phoenix Flame Case",
     "economy": {
-      "price": "5000000",
+      "price": "500000",
       "rewards": [
-        "100000",
-        "3500000",
-        "100000000"
+        "10000",
+        "350000",
+        "10000000"
       ],
-      "target": "5000000000",
+      "target": "500000000",
       "ev_low_bps": 4000,
       "ev_high_bps": 18000,
       "legendary_low_ppm": 2000,

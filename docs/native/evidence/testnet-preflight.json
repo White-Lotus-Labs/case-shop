@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-14T21:00:14.873Z",
+  "checkedAt": "2026-11-14T21:31:08.910Z",
   "network": "testnet",
   "readOnly": true,
   "signedTransactions": 0,
@@ -28,8 +28,10 @@
   ],
   "owner": {
     "accountId": "needmore_1_near.testnet",
-    "balance": "35994314652070433399199960",
-    "minimumNativeFundingYocto": "523000000000000000000000000"
+    "balance": "185994314652070433399199960",
+    "spendable": "185992494652070433399199960",
+    "additionalRequiredYocto": "0",
+    "minimumNativeFundingYocto": "84831250000000000000000000"
   },
   "tokens": [
     {
@@ -105,8 +107,6 @@
       "required": "1000000000000000000000000"
     }
   ],
-  "blockers": [
-    "Owner needs additional NEAR for the prepared account and prize funding, plus storage and gas."
-  ],
+  "blockers": [],
   "activation": "Requires explicit user authorization even if all read-only checks pass."
 }

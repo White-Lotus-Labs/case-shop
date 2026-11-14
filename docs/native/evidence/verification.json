@@ -6,8 +6,8 @@
     "evidence": "rust-tests.txt"
   },
   "typeScriptTests": {
-    "passed": 219,
-    "files": 25,
+    "passed": 221,
+    "files": 26,
     "command": "npm test -- --maxWorkers=2"
   },
   "checks": {
@@ -33,6 +33,11 @@
   "publicTestnet": {
     "signedTransactions": 0,
     "deployments": 0,
-    "requiredActions": "Authorize fresh deployments and provide the funding listed in the deployment manifest. Read-only preflight reports insufficient owner NEAR."
+    "requiredActions": "Explicit authorization remains required to create accounts, deploy, fund, and unpause the contracts."
+  },
+  "budget": {
+    "limitYocto": "150000000000000000000000000",
+    "estimatedTotalYocto": "84831250000000000000000000",
+    "gasAllowanceYocto": "10000000000000000000000000"
   }
 }
