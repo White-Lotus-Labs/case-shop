@@ -11,11 +11,48 @@ const wasmPath =
   "contracts/target/wasm32-unknown-unknown/release/near_native_case_pool.wasm";
 const wasm = await readFile(wasmPath);
 const digest = createHash("sha256").update(wasm).digest();
-const rounds = 2n;
+const rounds = 4n;
 const scale = 10n ** 18n;
 const near = 10n ** 24n;
 const maxBudget = 150n * near;
 const gasAllowance = 10n * near;
+const fundedAccounts = 25n * near;
+const tokenMinima = new Map();
+for (const entry of registry.cases) {
+  for (const reward of entry.config.bonus_rewards) {
+    if (!tokenMinima.has(reward.token_contract_id))
+      tokenMinima.set(
+        reward.token_contract_id,
+        await storageMinimum(reward.token_contract_id),
+      );
+  }
+}
+const tokenStorage = registry.cases
+  .flatMap((entry) => entry.config.bonus_rewards)
+  .reduce(
+    (sum, reward) => sum + BigInt(tokenMinima.get(reward.token_contract_id)),
+    0n,
+  );
+const poolBudget = maxBudget - fundedAccounts - gasAllowance - tokenStorage;
+const maximumRewards = registry.cases.map(
+  (entry) => BigInt(entry.config.economy.rewards[2]) * scale,
+);
+const totalMaximum = maximumRewards.reduce((sum, amount) => sum + amount, 0n);
+if (poolBudget < rounds * totalMaximum)
+  throw new Error(
+    "The 150 NEAR budget cannot cover four maximum rewards per case.",
+  );
+let allocated = 0n;
+const caseFunding = maximumRewards.map((maximum, index) => {
+  const amount =
+    index === maximumRewards.length - 1
+      ? poolBudget - allocated
+      : (poolBudget * maximum) / totalMaximum;
+  allocated += amount;
+  if (amount < maximum * rounds)
+    throw new Error("Insufficient maximum reward reserve.");
+  return amount;
+});
 const quote = (value) => `'${String(value).replaceAll("'", "'\\''")}'`;
 const command = (args) => args.map(quote).join(" ");
 const tx = (contract, method, args, deposit, gas = "100 Tgas") =>
@@ -50,8 +87,7 @@ const lines = [
 ];
 const tokenRequirements = new Map();
 let nearFunding = 0n;
-let tokenStorage = 0n;
-for (const entry of registry.cases) {
+for (const [caseIndex, entry] of registry.cases.entries()) {
   if (
     !entry.contractId.startsWith("native-") ||
     entry.contractId === entry.legacyContractId
@@ -109,13 +145,12 @@ for (const entry of registry.cases) {
       "send",
     ]),
   );
-  const poolFunding = BigInt(entry.config.economy.rewards[2]) * scale * rounds;
+  const poolFunding = caseFunding[caseIndex];
   nearFunding += poolFunding;
   lines.push(tx(entry.contractId, "fund_pool", {}, `${poolFunding} yoctoNEAR`));
   for (const reward of entry.config.bonus_rewards) {
     const amount = BigInt(reward.amount) * rounds;
-    const min = await storageMinimum(reward.token_contract_id);
-    tokenStorage += BigInt(min);
+    const min = tokenMinima.get(reward.token_contract_id);
     lines.push(
       tx(
         reward.token_contract_id,
@@ -159,7 +194,6 @@ for (const entry of registry.cases) {
     "",
   );
 }
-const fundedAccounts = 25n * near;
 const estimatedTotal =
   fundedAccounts + nearFunding + tokenStorage + gasAllowance;
 if (estimatedTotal > maxBudget)
@@ -191,12 +225,13 @@ await writeFile(
       budgetEstimateYocto: String(estimatedTotal),
       budgetLimitYocto: String(maxBudget),
       fundingPolicy:
-        "Two maximum native rewards per case and two of every configured FT candidate. Gas and FT storage are additional. Dynamic odds depend on remaining pool funds.",
+        "The remaining pool budget is allocated in proportion to each case's maximum native reward. Every pool and FT candidate covers at least four maximum concurrent rewards. The 10 NEAR gas allowance is an estimate, and any unused amount remains with the owner until separately funded to a pool.",
       tokens: [...tokenRequirements.values()],
-      cases: registry.cases.map((entry) => ({
+      cases: registry.cases.map((entry, index) => ({
         id: entry.id,
         contractId: entry.contractId,
         legacyContractId: entry.legacyContractId,
+        nativeFundingYocto: String(caseFunding[index]),
       })),
     },
     null,

@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-14T21:31:08.910Z",
+  "checkedAt": "2026-11-14T21:34:27.434Z",
   "network": "testnet",
   "readOnly": true,
   "signedTransactions": 0,
@@ -31,80 +31,80 @@
     "balance": "185994314652070433399199960",
     "spendable": "185992494652070433399199960",
     "additionalRequiredYocto": "0",
-    "minimumNativeFundingYocto": "84831250000000000000000000"
+    "minimumNativeFundingYocto": "150000000000000000000000000"
   },
   "tokens": [
     {
       "tokenContractId": "iroh-test-shitzu.testnet",
       "metadataMatches": true,
       "balance": "92500000000",
-      "required": "150000000"
+      "required": "300000000"
     },
     {
       "tokenContractId": "blackdragon.needmore_1_near.testnet",
       "metadataMatches": true,
       "balance": "97500000000000000000000000000",
-      "required": "50000000000000000000000000"
+      "required": "100000000000000000000000000"
     },
     {
       "tokenContractId": "neko.needmore_1_near.testnet",
       "metadataMatches": true,
       "balance": "94000000000000000000000000000",
-      "required": "120000000000000000000000000"
+      "required": "240000000000000000000000000"
     },
     {
       "tokenContractId": "iroh-test-rhea.testnet",
       "metadataMatches": true,
       "balance": "98200000000",
-      "required": "36000000"
+      "required": "72000000"
     },
     {
       "tokenContractId": "iroh-test-aurora.testnet",
       "metadataMatches": true,
       "balance": "98700000000",
-      "required": "26000000"
+      "required": "52000000"
     },
     {
       "tokenContractId": "purge.needmore_1_near.testnet",
       "metadataMatches": true,
       "balance": "98000000000000000000000",
-      "required": "40000000000000000000"
+      "required": "80000000000000000000"
     },
     {
       "tokenContractId": "gear.needmore_1_near.testnet",
       "metadataMatches": true,
       "balance": "99800000000000000000000",
-      "required": "4000000000000000000"
+      "required": "8000000000000000000"
     },
     {
       "tokenContractId": "mpdao.needmore_1_near.testnet",
       "metadataMatches": true,
       "balance": "97300000000",
-      "required": "54000000"
+      "required": "108000000"
     },
     {
       "tokenContractId": "stnear.needmore_1_near.testnet",
       "metadataMatches": true,
       "balance": "99870000000000000000000000000",
-      "required": "2600000000000000000000000"
+      "required": "5200000000000000000000000"
     },
     {
       "tokenContractId": "linear.needmore_1_near.testnet",
       "metadataMatches": true,
       "balance": "99880000000000000000000000000",
-      "required": "2400000000000000000000000"
+      "required": "4800000000000000000000000"
     },
     {
       "tokenContractId": "wnear.needmore_1_near.testnet",
       "metadataMatches": true,
       "balance": "99875000000000000000000000000",
-      "required": "2500000000000000000000000"
+      "required": "5000000000000000000000000"
     },
     {
       "tokenContractId": "rnear.needmore_1_near.testnet",
       "metadataMatches": true,
       "balance": "99950000000000000000000000000",
-      "required": "1000000000000000000000000"
+      "required": "2000000000000000000000000"
     }
   ],
   "blockers": [],

@@ -6,7 +6,7 @@
     "evidence": "rust-tests.txt"
   },
   "typeScriptTests": {
-    "passed": 221,
+    "passed": 222,
     "files": 26,
     "command": "npm test -- --maxWorkers=2"
   },
@@ -37,7 +37,10 @@
   },
   "budget": {
     "limitYocto": "150000000000000000000000000",
-    "estimatedTotalYocto": "84831250000000000000000000",
-    "gasAllowanceYocto": "10000000000000000000000000"
+    "allocatedTotalYocto": "150000000000000000000000000",
+    "nativeRewardFundingYocto": "114968750000000000000000000",
+    "gasAllowanceYocto": "10000000000000000000000000",
+    "maximumConcurrentPrizesPerCase": 4,
+    "qualification": "Gas is an allowance; actual fees and any unused allowance require reconciliation."
   }
 }
