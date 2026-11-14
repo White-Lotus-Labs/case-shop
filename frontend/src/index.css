@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+/*
+ * Apple Human Interface Guidelines — dark appearance.
+ * System colors, label/fill/separator hierarchy, materials and the SF text styles,
+ * exposed as Tailwind tokens. Spacing follows an 8pt grid (Tailwind 2 = 8px).
+ */
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Inter", system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Inter", system-ui, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, Menlo, monospace;
+
+  /* backgrounds (systemBackground → tertiarySystemBackground) */
+  --color-bg: #000000;
+  --color-bg-2: #1c1c1e;
+  --color-bg-3: #2c2c2e;
+
+  /* labels */
+  --color-label: #ffffff;
+  --color-label-2: rgb(235 235 245 / 0.6);
+  --color-label-3: rgb(235 235 245 / 0.3);
+  --color-label-4: rgb(235 235 245 / 0.16);
+
+  /* fills (for controls on top of backgrounds) */
+  --color-fill: rgb(120 120 128 / 0.36);
+  --color-fill-2: rgb(120 120 128 / 0.32);
+  --color-fill-3: rgb(118 118 128 / 0.24);
+  --color-fill-4: rgb(118 118 128 / 0.18);
+
+  --color-separator: rgb(84 84 88 / 0.6);
+  --color-thumb: #636366;
+
+  /* system tints */
+  --color-tint: #0a84ff;
+  --color-success: #30d158;
+  --color-warning: #ff9f0a;
+  --color-danger: #ff453a;
+
+  /* continuous-corner radii used by HIG components */
+  --radius-control: 8px;
+  --radius-segment: 9px;
+  --radius-button: 12px;
+  --radius-button-lg: 14px;
+  --radius-group: 12px;
+  --radius-card: 20px;
+  --radius-sheet: 22px;
+
+  --ease-standard: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+:root {
+  color-scheme: dark;
+  /* tier accent, set inline by the app */
+  --tier: #c08a5b;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background: var(--color-bg);
+    color: var(--color-label);
+    font-size: 17px;
+    line-height: 1.294;
+    letter-spacing: -0.022em;
+  }
+  button {
+    cursor: default;
+  }
+  :focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-tint) 70%, transparent);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--color-tint) 45%, transparent);
+  }
+}
+
+/* SF text styles (iOS dynamic type, "Large" size) with apple.com web tracking */
+@layer components {
+  .t-large-title { font: 700 34px/41px var(--font-display); letter-spacing: 0.011em; }
+  .t-title-1 { font: 700 28px/34px var(--font-display); letter-spacing: 0.013em; }
+  .t-title-2 { font: 700 22px/28px var(--font-display); letter-spacing: 0.016em; }
+  .t-title-3 { font: 600 20px/25px var(--font-display); letter-spacing: 0.019em; }
+  .t-headline { font: 600 17px/22px var(--font-sans); letter-spacing: -0.024em; }
+  .t-body { font: 400 17px/22px var(--font-sans); letter-spacing: -0.024em; }
+  .t-callout { font: 400 16px/21px var(--font-sans); letter-spacing: -0.02em; }
+  .t-subheadline { font: 400 15px/20px var(--font-sans); letter-spacing: -0.015em; }
+  .t-footnote { font: 400 13px/18px var(--font-sans); letter-spacing: -0.006em; }
+  .t-caption { font: 400 12px/16px var(--font-sans); letter-spacing: 0; }
+  .t-caption-2 { font: 400 11px/13px var(--font-sans); letter-spacing: 0.006em; }
+
+  /* Materials: translucent blurred surfaces (regular / thick) */
+  .material-bar {
+    background: rgb(22 22 23 / 0.8);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+  }
+  /* Panels float over a live WebGL canvas, where a backdrop blur would be recomputed every
+     frame; a dense translucent fill reads the same against the dark stage at a fraction of the cost. */
+  .material-regular {
+    background: rgb(30 30 32 / 0.88);
+  }
+}
+
+@layer utilities {
+  .tnum { font-variant-numeric: tabular-nums; }
+  .hairline-b { box-shadow: inset 0 -0.5px 0 var(--color-separator); }
+  .hairline-t { box-shadow: inset 0 0.5px 0 var(--color-separator); }
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  /* ambient light behind the hero object, tinted by the current tier */
+  .stage-glow {
+    background:
+      radial-gradient(55% 45% at 50% 48%, color-mix(in oklab, var(--tier) 14%, transparent), transparent 72%),
+      radial-gradient(90% 60% at 50% 100%, rgb(255 255 255 / 0.03), transparent 70%),
+      #050505;
+    transition: background 600ms var(--ease-standard);
+  }
+  .appear {
+    animation: appear 500ms var(--ease-spring) both;
+  }
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes spokes {
+  to { transform: rotate(360deg); }
+}
+
+/* native <dialog> presented as an Apple sheet */
+dialog.sheet {
+  margin: auto;
+  padding: 0;
+  border: 0;
+  color: var(--color-label);
+  background: var(--color-bg-2);
+  border-radius: var(--radius-sheet);
+  width: min(680px, calc(100% - 32px));
+  max-height: min(760px, calc(100dvh - 48px));
+  box-shadow: 0 30px 80px rgb(0 0 0 / 0.6), inset 0 0.5px 0 rgb(255 255 255 / 0.08);
+  overflow: hidden;
+}
+dialog.sheet[open] {
+  display: flex;
+  flex-direction: column;
+  animation: sheet-in 420ms var(--ease-spring);
+}
+dialog.sheet::backdrop {
+  background: rgb(0 0 0 / 0.5);
+  animation: fade-in 300ms var(--ease-standard);
+}
+@media (max-width: 639px) {
+  dialog.sheet {
+    margin: auto 0 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 40px);
+    border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+@keyframes sheet-in {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after, dialog.sheet[open], dialog.sheet::backdrop {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}
