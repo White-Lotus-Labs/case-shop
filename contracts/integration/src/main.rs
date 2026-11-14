@@ -7,6 +7,7 @@ use std::path::Path;
 
 mod collection;
 mod migration;
+mod native;
 
 const STARTER: u128 = 1_000_000_000;
 const PRICE: u128 = 1_000_000;
@@ -186,6 +187,9 @@ async fn reconcile(token: &Contract, game: &Contract) -> Result<Value> {
 #[tokio::main]
 async fn main() -> Result<()> {
     if let Some(argument) = std::env::args_os().nth(1) {
+        if argument == "--native" {
+            return native::verify().await;
+        }
         if argument == "--collection" {
             return collection::verify().await;
         }

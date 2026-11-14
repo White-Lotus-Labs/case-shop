@@ -1,0 +1,48 @@
+{
+  "owner_id": "needmore_1_near.testnet",
+  "treasury_id": "needmore_1_near.testnet",
+  "config": {
+    "case_id": "dragon-tea",
+    "name": "Dragon Tea Case",
+    "economy": {
+      "price": "1000000",
+      "rewards": [
+        "100000",
+        "1000000",
+        "5000000"
+      ],
+      "target": "1000000000",
+      "ev_low_bps": 6000,
+      "ev_high_bps": 14000,
+      "legendary_low_ppm": 10000,
+      "legendary_target_ppm": 50000,
+      "legendary_high_ppm": 150000
+    },
+    "bonus_rewards": [
+      {
+        "token_contract_id": "iroh-test-shitzu.testnet",
+        "token_symbol": "SHITZU",
+        "display_name": "Test Shitzu",
+        "token_decimals": 6,
+        "amount": "50000000",
+        "tier": 0
+      },
+      {
+        "token_contract_id": "iroh-test-rhea.testnet",
+        "token_symbol": "RHEA",
+        "display_name": "Test Rhea",
+        "token_decimals": 6,
+        "amount": "5000000",
+        "tier": 1
+      },
+      {
+        "token_contract_id": "iroh-test-aurora.testnet",
+        "token_symbol": "AURORA",
+        "display_name": "Test Aurora",
+        "token_decimals": 6,
+        "amount": "1000000",
+        "tier": 2
+      }
+    ]
+  }
+}

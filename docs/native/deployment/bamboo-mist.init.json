@@ -1,0 +1,56 @@
+{
+  "owner_id": "needmore_1_near.testnet",
+  "treasury_id": "needmore_1_near.testnet",
+  "config": {
+    "case_id": "bamboo-mist",
+    "name": "Bamboo Mist Case",
+    "economy": {
+      "price": "500000",
+      "rewards": [
+        "200000",
+        "500000",
+        "4000000"
+      ],
+      "target": "250000000",
+      "ev_low_bps": 7000,
+      "ev_high_bps": 11500,
+      "legendary_low_ppm": 1000,
+      "legendary_target_ppm": 15000,
+      "legendary_high_ppm": 30000
+    },
+    "bonus_rewards": [
+      {
+        "token_contract_id": "iroh-test-shitzu.testnet",
+        "token_symbol": "SHITZU",
+        "display_name": "Test Shitzu",
+        "token_decimals": 6,
+        "amount": "25000000",
+        "tier": 0
+      },
+      {
+        "token_contract_id": "blackdragon.needmore_1_near.testnet",
+        "token_symbol": "BLACKDRAGON",
+        "display_name": "Test Black Dragon",
+        "token_decimals": 24,
+        "amount": "25000000000000000000000000",
+        "tier": 0
+      },
+      {
+        "token_contract_id": "neko.needmore_1_near.testnet",
+        "token_symbol": "NEKO",
+        "display_name": "Test Neko",
+        "token_decimals": 24,
+        "amount": "10000000000000000000000000",
+        "tier": 1
+      },
+      {
+        "token_contract_id": "iroh-test-rhea.testnet",
+        "token_symbol": "RHEA",
+        "display_name": "Test Rhea",
+        "token_decimals": 6,
+        "amount": "1000000",
+        "tier": 2
+      }
+    ]
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "checkedAt": "2026-11-14T21:00:14.873Z",
+  "network": "testnet",
+  "readOnly": true,
+  "signedTransactions": 0,
+  "sha256": "173736c8b20a7a02713ff49195ec4001875a1209bd83709701f4418376b8854a",
+  "accounts": [
+    {
+      "contractId": "native-bamboo.needmore_1_near.testnet",
+      "absent": true
+    },
+    {
+      "contractId": "native-dragon.needmore_1_near.testnet",
+      "absent": true
+    },
+    {
+      "contractId": "native-moon.needmore_1_near.testnet",
+      "absent": true
+    },
+    {
+      "contractId": "native-phoenix.needmore_1_near.testnet",
+      "absent": true
+    },
+    {
+      "contractId": "native-reserve.needmore_1_near.testnet",
+      "absent": true
+    }
+  ],
+  "owner": {
+    "accountId": "needmore_1_near.testnet",
+    "balance": "35994314652070433399199960",
+    "minimumNativeFundingYocto": "523000000000000000000000000"
+  },
+  "tokens": [
+    {
+      "tokenContractId": "iroh-test-shitzu.testnet",
+      "metadataMatches": true,
+      "balance": "92500000000",
+      "required": "150000000"
+    },
+    {
+      "tokenContractId": "blackdragon.needmore_1_near.testnet",
+      "metadataMatches": true,
+      "balance": "97500000000000000000000000000",
+      "required": "50000000000000000000000000"
+    },
+    {
+      "tokenContractId": "neko.needmore_1_near.testnet",
+      "metadataMatches": true,
+      "balance": "94000000000000000000000000000",
+      "required": "120000000000000000000000000"
+    },
+    {
+      "tokenContractId": "iroh-test-rhea.testnet",
+      "metadataMatches": true,
+      "balance": "98200000000",
+      "required": "36000000"
+    },
+    {
+      "tokenContractId": "iroh-test-aurora.testnet",
+      "metadataMatches": true,
+      "balance": "98700000000",
+      "required": "26000000"
+    },
+    {
+      "tokenContractId": "purge.needmore_1_near.testnet",
+      "metadataMatches": true,
+      "balance": "98000000000000000000000",
+      "required": "40000000000000000000"
+    },
+    {
+      "tokenContractId": "gear.needmore_1_near.testnet",
+      "metadataMatches": true,
+      "balance": "99800000000000000000000",
+      "required": "4000000000000000000"
+    },
+    {
+      "tokenContractId": "mpdao.needmore_1_near.testnet",
+      "metadataMatches": true,
+      "balance": "97300000000",
+      "required": "54000000"
+    },
+    {
+      "tokenContractId": "stnear.needmore_1_near.testnet",
+      "metadataMatches": true,
+      "balance": "99870000000000000000000000000",
+      "required": "2600000000000000000000000"
+    },
+    {
+      "tokenContractId": "linear.needmore_1_near.testnet",
+      "metadataMatches": true,
+      "balance": "99880000000000000000000000000",
+      "required": "2400000000000000000000000"
+    },
+    {
+      "tokenContractId": "wnear.needmore_1_near.testnet",
+      "metadataMatches": true,
+      "balance": "99875000000000000000000000000",
+      "required": "2500000000000000000000000"
+    },
+    {
+      "tokenContractId": "rnear.needmore_1_near.testnet",
+      "metadataMatches": true,
+      "balance": "99950000000000000000000000000",
+      "required": "1000000000000000000000000"
+    }
+  ],
+  "blockers": [
+    "Owner needs additional NEAR for the prepared account and prize funding, plus storage and gas."
+  ],
+  "activation": "Requires explicit user authorization even if all read-only checks pass."
+}

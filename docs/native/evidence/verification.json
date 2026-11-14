@@ -1,0 +1,38 @@
+{
+  "network": "ephemeral local NEAR Sandbox; public Testnet reads only",
+  "rustTests": {
+    "passed": 91,
+    "command": "npm run contracts:test",
+    "evidence": "rust-tests.txt"
+  },
+  "typeScriptTests": {
+    "passed": 219,
+    "files": 25,
+    "command": "npm test -- --maxWorkers=2"
+  },
+  "checks": {
+    "backendTypecheck": "passed",
+    "frontendTypecheck": "passed",
+    "backendProductionBuild": "passed",
+    "frontendProductionBuild": "passed",
+    "gitDiffCheck": "passed"
+  },
+  "nativeSandbox": {
+    "cases": 5,
+    "openGasTgas": 150,
+    "retryGasTgas": 100,
+    "evidence": "../../evidence/native-sandbox.json"
+  },
+  "browser": {
+    "acceptanceChecks": 11,
+    "pageErrors": 0,
+    "signedLocalTransactions": 25,
+    "evidence": "browser.json"
+  },
+  "wasmSha256": "173736c8b20a7a02713ff49195ec4001875a1209bd83709701f4418376b8854a",
+  "publicTestnet": {
+    "signedTransactions": 0,
+    "deployments": 0,
+    "requiredActions": "Authorize fresh deployments and provide the funding listed in the deployment manifest. Read-only preflight reports insufficient owner NEAR."
+  }
+}

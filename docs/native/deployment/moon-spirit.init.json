@@ -1,0 +1,64 @@
+{
+  "owner_id": "needmore_1_near.testnet",
+  "treasury_id": "needmore_1_near.testnet",
+  "config": {
+    "case_id": "moon-spirit",
+    "name": "Moon Spirit Case",
+    "economy": {
+      "price": "2000000",
+      "rewards": [
+        "100000",
+        "2000000",
+        "20000000"
+      ],
+      "target": "2000000000",
+      "ev_low_bps": 5000,
+      "ev_high_bps": 16000,
+      "legendary_low_ppm": 5000,
+      "legendary_target_ppm": 40000,
+      "legendary_high_ppm": 100000
+    },
+    "bonus_rewards": [
+      {
+        "token_contract_id": "purge.needmore_1_near.testnet",
+        "token_symbol": "PURGE",
+        "display_name": "Test Purge",
+        "token_decimals": 18,
+        "amount": "20000000000000000000",
+        "tier": 0
+      },
+      {
+        "token_contract_id": "gear.needmore_1_near.testnet",
+        "token_symbol": "GEAR",
+        "display_name": "Test Gear",
+        "token_decimals": 18,
+        "amount": "2000000000000000000",
+        "tier": 0
+      },
+      {
+        "token_contract_id": "neko.needmore_1_near.testnet",
+        "token_symbol": "NEKO",
+        "display_name": "Test Neko",
+        "token_decimals": 24,
+        "amount": "50000000000000000000000000",
+        "tier": 1
+      },
+      {
+        "token_contract_id": "mpdao.needmore_1_near.testnet",
+        "token_symbol": "mpDAO",
+        "display_name": "Test mpDAO",
+        "token_decimals": 6,
+        "amount": "2000000",
+        "tier": 1
+      },
+      {
+        "token_contract_id": "stnear.needmore_1_near.testnet",
+        "token_symbol": "STNEAR",
+        "display_name": "Test Staked NEAR",
+        "token_decimals": 24,
+        "amount": "100000000000000000000000",
+        "tier": 2
+      }
+    ]
+  }
+}

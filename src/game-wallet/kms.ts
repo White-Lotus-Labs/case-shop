@@ -43,7 +43,7 @@ function fieldIs(value: unknown, text: string, code: number): boolean {
   return value === text || value === code;
 }
 export function crc32c(data: Uint8Array): number {
-  const module: unknown = createRequire(import.meta.url)('fast-crc32c');
+  const module: unknown = createRequire(import.meta.url)('fast-crc32c/impls/js_crc32c');
   const calculate = object(module).calculate;
   if (typeof calculate !== 'function')
     throw new Error('CRC32C implementation unavailable.');
