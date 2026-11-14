@@ -88,4 +88,3 @@
 'near' 'contract' 'call-function' 'as-transaction' 'wnear.needmore_1_near.testnet' 'ft_transfer_call' 'json-args' '{"receiver_id":"native-reserve.needmore_1_near.testnet","amount":"2000000000000000000000000","msg":"{\"action\":\"fund\"}"}' 'prepaid-gas' '100 Tgas' 'attached-deposit' '1 yoctoNEAR' 'sign-as' 'needmore_1_near.testnet' 'network-config' 'testnet' 'sign-with-keychain' 'send'
 # Inspect get_pool and get_reward_inventory before unpausing.
 'near' 'contract' 'call-function' 'as-transaction' 'native-reserve.needmore_1_near.testnet' 'set_paused' 'json-args' '{"paused":false}' 'prepaid-gas' '30 Tgas' 'attached-deposit' '1 yoctoNEAR' 'sign-as' 'needmore_1_near.testnet' 'network-config' 'testnet' 'sign-with-keychain' 'send'
-

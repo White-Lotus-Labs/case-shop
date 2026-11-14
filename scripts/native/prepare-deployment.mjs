@@ -154,7 +154,7 @@ for (const entry of registry.cases) {
     "",
   );
 }
-await writeFile(`${output}/commands.review.txt`, lines.join("\n") + "\n");
+await writeFile(`${output}/commands.review.txt`, lines.join("\n").trimEnd() + "\n");
 await writeFile(
   `${output}/manifest.json`,
   JSON.stringify(
