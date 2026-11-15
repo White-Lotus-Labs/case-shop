@@ -495,9 +495,15 @@ export class CaseClient {
     params: object,
     signal?: AbortSignal,
   ): Promise<unknown> {
-    const timeout = AbortSignal.timeout(8000);
-    const send = async () => {
-      const response = await this.request(this.config.rpcUrl, {
+    if (!['query', 'block', 'tx', 'EXPERIMENTAL_protocol_config'].includes(method))
+      throw new Error('Only read RPC methods are allowed.');
+    const endpoints = ['https://near-testnet.drpc.org', 'https://rpc.testnet.near.org'];
+    const urls = endpoints.includes(this.config.rpcUrl)
+      ? [this.config.rpcUrl, ...endpoints.filter((url) => url !== this.config.rpcUrl)]
+      : [this.config.rpcUrl];
+    const send = async (url: string) => {
+      const timeout = AbortSignal.timeout(8000);
+      const response = await this.request(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -508,6 +514,11 @@ export class CaseClient {
         }),
         signal: signal ? AbortSignal.any([signal, timeout]) : timeout,
         cache: 'no-store',
+      }).catch((cause: unknown) => {
+        if (signal?.aborted) throw cause;
+        if (timeout.aborted || cause instanceof DOMException && cause.name === 'TimeoutError')
+          throw new TestnetTransportError('Testnet RPC request timed out.');
+        throw cause;
       });
       if (!response.ok) {
         if (response.status === 429)
@@ -523,11 +534,16 @@ export class CaseClient {
     };
     let body: Record<string, unknown>;
     try {
-      body = await send();
+      try {
+        body = await send(urls[0]);
+      } catch (cause) {
+        if (signal?.aborted || urls.length < 2 ||
+          !(cause instanceof TypeError || cause instanceof TestnetTransportError && cause.retryable))
+          throw cause;
+        body = await send(urls[1]);
+      }
     } catch (cause) {
       if (signal?.aborted) throw cause;
-      if (timeout.aborted)
-        throw new TestnetTransportError('Testnet RPC request timed out.');
       if (cause instanceof TypeError)
         throw new TestnetTransportError('Could not reach Testnet RPC.');
       throw cause;

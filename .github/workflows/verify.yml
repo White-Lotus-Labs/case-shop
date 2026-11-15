@@ -1,0 +1,75 @@
+name: Verify
+on:
+  push:
+    branches: [main, feature/final-fujitora-polish]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  application:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            frontend/package-lock.json
+      - run: npm ci
+      - run: npm --prefix frontend ci
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm --prefix frontend run typecheck
+      - run: npm run build -- --webpack
+      - run: npm --prefix frontend run build
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install pinned Rust toolchain
+        run: rustup show
+        working-directory: contracts
+      - run: npm run contracts:test
+      - run: npm run contracts:build
+      - name: Legacy Sandbox integration
+        run: npm run contracts:integration
+      - name: Native and charity Sandbox integration
+        run: node scripts/native/verify-upgrade.mjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            frontend/package-lock.json
+      - run: npm ci
+      - run: npm --prefix frontend ci
+      - run: npx playwright install --with-deps chromium
+      - name: Locate local Sandbox binary
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          binaries = [p for p in Path('contracts/integration/target').rglob('near-sandbox') if p.is_file() and os.access(p, os.X_OK)]
+          if not binaries:
+              raise SystemExit('Sandbox integration did not install its binary')
+          with open(os.environ['GITHUB_ENV'], 'a') as output:
+              output.write(f'NEAR_SANDBOX_BIN={binaries[0].resolve()}\n')
+          PY
+      - name: Browser wallet and responsive acceptance
+        run: npm run test:native:browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sandbox-verification
+          path: |
+            docs/native/evidence/browser.json
+            docs/native/evidence/browser-desktop.png
+            docs/native/evidence/browser-mobile.png
+            docs/evidence/native-sandbox.json

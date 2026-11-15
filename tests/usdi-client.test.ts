@@ -834,3 +834,14 @@ it('reads contract-defined odds for guests without exposing a signing quote', as
     available: '1000000000',
   });
 });
+
+it('classifies account lookup failures as preflight without submitting a payable call', async () => {
+  const signer = fakeWallet();
+  signer.wallet.getAccounts = async () => { throw new Error('RPC unavailable'); };
+  const { WalletPreflightError } = await import('../src/wallet/nearConnector');
+  await expect(signTestnetFunctionCall(signer.wallet, 'alice.testnet', {
+    receiverId: 'case.testnet', methodName: 'open', args: { nonce: '0' },
+    gas: '250000000000000', deposit: '50000000000000000000000',
+  })).rejects.toBeInstanceOf(WalletPreflightError);
+  expect(signer.signed).toEqual([]);
+});

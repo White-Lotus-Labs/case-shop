@@ -1,5 +1,5 @@
 const TESTNET_ENDPOINTS = [
-  'https://rpc.testnet.fastnear.com',
+  'https://near-testnet.drpc.org',
   'https://rpc.testnet.near.org',
 ];
 

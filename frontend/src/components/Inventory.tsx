@@ -1,5 +1,6 @@
 import { BundleList } from "@/components/Bundle";
-import type { HistoryEntry } from "@/lib/api";
+import { openingTime, type HistoryEntry } from "@/lib/api";
+import { fmt } from "@/lib/cases";
 import { CASES } from "@/lib/cases";
 import { tierOf } from "@/lib/tiers";
 import { Button, Glyph, Sheet } from "@/ui/kit";
@@ -31,7 +32,7 @@ export function Inventory({
           <span className="text-[13px] text-label-2">
             Decentralized rewards sent directly to your connected NEAR account.
           </span>
-          <span className="text-[11px] font-mono text-[#00EC97] bg-[#00EC97]/10 px-2 py-0.5 rounded border border-[#00EC97]/25 flex items-center gap-1.5">
+          <span className="text-[11px] font-mono text-[#d7bd89] bg-[#d7bd89]/10 px-2 py-0.5 rounded border border-[#d7bd89]/25 flex items-center gap-1.5">
             <img src="/near-badge.webp" alt="NEAR" className="size-3.5 object-contain" />
             {items.length} Finalized
           </span>
@@ -78,8 +79,13 @@ export function Inventory({
               </div>
               <div className="flex items-center justify-between text-[11px] text-label-3">
                 <span>Block {entry.height}</span>
-                <span className="text-[#00EC97] font-semibold">{entry.status}</span>
+                <span className="text-[#d7bd89] font-semibold">{entry.status}</span>
               </div>
+              <div className="flex flex-wrap justify-between gap-2 text-xs text-label-2">
+                <span>{fmt(entry.spent)} spent · {entry.tier ?? "Drawing"}</span>
+                <time dateTime={openingTime(entry.timestamp).iso}>{openingTime(entry.timestamp).label}</time>
+              </div>
+              <a className="text-xs text-purple-300 underline underline-offset-4" href={entry.transactionHash ? `https://testnet.nearblocks.io/txns/${entry.transactionHash}` : `https://testnet.nearblocks.io/blocks/${entry.height}`} target="_blank" rel="noopener noreferrer">{entry.transactionHash ? "View verified transaction ↗" : "View opening block · transaction reference unavailable ↗"}</a>
               <BundleList assets={entry.assets} />
               {(entry.status === "Claimable" ||
                 entry.status === "RandomnessPending") && (

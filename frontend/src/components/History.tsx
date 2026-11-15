@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { BundleList } from "@/components/Bundle";
-import type { HistoryEntry } from "@/lib/api";
+import { openingTime, type HistoryEntry } from "@/lib/api";
 import { CASES } from "@/lib/cases";
 import { sound } from "@/lib/sound";
 import { tierOf } from "@/lib/tiers";
@@ -52,14 +52,14 @@ export function History({
           <div className="hairline-b px-5 py-4 bg-[#0a0d24]/90 flex items-center justify-between">
             <div>
               <div className="font-display text-[15px] font-bold tracking-wide text-white flex items-center gap-2">
-                <span className="size-2 rounded-full bg-[#00EC97] animate-ping" />
+                <span className="size-2 rounded-full bg-[#d7bd89] animate-ping" />
                 Live On-Chain Openings
               </div>
               <p className="t-caption mt-0.5 text-label-2">
                 Finalized on-chain records · Latest {entries.length} vault activations
               </p>
             </div>
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#00EC97]/15 text-[#00EC97] text-[11px] font-semibold border border-[#00EC97]/30">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#d7bd89]/15 text-[#d7bd89] text-[11px] font-semibold border border-[#d7bd89]/30">
               <img src="/near-badge.webp" alt="NEAR" className="size-3.5 object-contain" />
               <span>NEAR Verified</span>
             </div>
@@ -79,7 +79,7 @@ export function History({
             {entries.map((entry) => (
               <div
                 key={entry.id}
-                className="hairline-b flex items-start gap-3 py-3 hover:bg-white/[0.02] transition-colors rounded-lg px-2"
+                className={`hairline-b flex items-start gap-3 py-3 hover:bg-white/[0.02] transition-colors rounded-lg px-2 ${entry.tier === "Legendary" ? "border border-amber-300/40 bg-amber-400/5" : ""}`}
               >
                 <span
                   className="mt-1.5 size-2 shrink-0 rounded-full shadow-[0_0_8px_currentColor]"
@@ -88,15 +88,20 @@ export function History({
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
                     <span className="t-footnote font-semibold truncate text-white">
-                      {entry.accountId === me ? "You (Connected)" : entry.accountId}
+                      {entry.accountId === me ? "You" : `${entry.accountId.slice(0, 8)}…${entry.accountId.slice(-8)}`}
                     </span>
-                    <span className="text-[11px] font-mono text-[#00EC97] bg-[#00EC97]/10 px-2 py-0.5 rounded border border-[#00EC97]/20">
+                    <span className="text-[11px] font-mono text-[#d7bd89] bg-[#d7bd89]/10 px-2 py-0.5 rounded border border-[#d7bd89]/20">
                       Block #{entry.height}
                     </span>
                   </div>
                   <div className="text-[12px] text-label-2 mt-0.5">
                     {CASES.find((c) => c.id === entry.caseId)?.name ?? entry.caseId}{" "}
                     · Opening #{entry.openingId}
+                  </div>
+                  <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-label-2">
+                    <span>{entry.tier ?? "Drawing"} · {entry.status}</span>
+                    <time dateTime={openingTime(entry.timestamp).iso}>{openingTime(entry.timestamp).label}</time>
+                    <a href={entry.transactionHash ? `https://testnet.nearblocks.io/txns/${entry.transactionHash}` : `https://testnet.nearblocks.io/blocks/${entry.height}`} target="_blank" rel="noopener noreferrer" className="text-purple-300 underline">{entry.transactionHash ? "Verified transaction ↗" : "Opening block ↗"}</a>
                   </div>
                   <div className="mt-2">
                     <BundleList assets={entry.assets} dense />
@@ -106,7 +111,7 @@ export function History({
             ))}
             {onMore && (
               <button
-                className="t-footnote py-3 w-full text-center font-semibold text-[#00EC97] hover:text-[#55f6bb] transition-colors"
+                className="t-footnote py-3 w-full text-center font-semibold text-[#d7bd89] hover:text-[#f0dab2] transition-colors"
                 onClick={onMore}
               >
                 Load older transactions ↓
@@ -126,11 +131,11 @@ export function History({
         className="material-regular flex h-11 items-center gap-2.5 rounded-full pr-4 pl-4 border border-purple-500/25 shadow-[0_4px_20px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)] transition-transform active:scale-[0.97] hover:border-purple-400/50"
       >
         <span className="relative flex size-2.5">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#00EC97] opacity-75" />
-          <span className="relative inline-flex size-2.5 rounded-full bg-[#00EC97]" />
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#d7bd89] opacity-75" />
+          <span className="relative inline-flex size-2.5 rounded-full bg-[#d7bd89]" />
         </span>
         <span className="font-display text-[13px] font-bold tracking-wide text-white">Live Activity</span>
-        <span className="flex items-center gap-0.5 text-[12px] font-semibold text-[#00EC97]">
+        <span className="flex items-center gap-0.5 text-[12px] font-semibold text-[#d7bd89]">
           {open ? "Hide" : "Show"}
           <Glyph
             name={open ? "chevron-down" : "chevron-up"}

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   CaseClient,
+  transactionHash,
   formatUnits,
   percent,
   walletTransactionHash,
@@ -92,6 +93,7 @@ const openingSchema = oddsSchema.and(
     account_id: walletAccountId,
     nonce: nativeU64,
     accepted_height: nativeU64,
+    accepted_timestamp: nativeU64,
     accepted_revision: nativeU64,
     status: z.enum(["RandomnessPending", "Paying", "Claimable", "Completed"]),
     reward: nativeInteger.nullable(),
@@ -534,6 +536,9 @@ export class NativeCaseClient {
   }
   finalBlockHeight(signal?: AbortSignal) {
     return this.transport.finalBlockHeight(signal);
+  }
+  rawTransaction(hash: string, account: string) {
+    return this.transport.rpc('tx', { tx_hash: transactionHash(hash), sender_account_id: walletAccountId.parse(account), wait_until: 'FINAL' });
   }
   transaction(
     hash: string,

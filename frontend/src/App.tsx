@@ -12,6 +12,8 @@ import { Inventory } from "@/components/Inventory";
 import { Homepage } from "@/components/Homepage";
 import type { BundleAsset, HistoryEntry } from "@/lib/api";
 import { fmt, formatAmount } from "@/lib/cases";
+import { nativeOpeningTransactions } from "../../src/case/nativeTransactions";
+import { PANDA_X_PROFILE } from "@/lib/social";
 import { runtimeCases, runtimeConnector } from "@/lib/runtime";
 import { RARITY_INDEX, sound } from "@/lib/sound";
 import { RARITY_COLOR, tierOf } from "@/lib/tiers";
@@ -24,6 +26,7 @@ import {
   type NativeQuote,
   type NativePool,
 } from "../../src/case/nativeClient";
+import { WalletPreflightError } from "../../src/wallet/nearConnector";
 import {
   WalletController,
   INITIAL_WALLET_STATE,
@@ -86,6 +89,10 @@ function entry(opening: NativeOpening): HistoryEntry {
     caseId: opening.caseId,
     openingId: opening.opening_id,
     height: opening.accepted_height,
+    nonce: opening.nonce,
+    timestamp: opening.accepted_timestamp,
+    tier: opening.tier,
+    spent: CASES.find((row) => row.id === opening.caseId)?.price ?? "0",
     status: opening.status,
     assets: assets(opening),
   };
@@ -120,6 +127,7 @@ export default function App() {
   const [result, setResult] = useState<NativeOpening | null>(null);
   const [uncertain, setUncertain] = useState<NativePending | null>(null);
   const [recoveryHash, setRecoveryHash] = useState("");
+  const [transactionLinks, setTransactionLinks] = useState<Record<string, string>>({});
   const [personal, setPersonal] = useState<HistoryEntry[]>([]);
   const [global, setGlobal] = useState<HistoryEntry[]>([]);
   const [personalCursors, setPersonalCursors] = useState<
@@ -135,6 +143,8 @@ export default function App() {
   const [pending, setPending] = useState<string | null>(null);
   const signing = useRef(false);
   const [animating, setAnimating] = useState(false);
+  const [presentation, setPresentation] = useState<StagePhase>("idle");
+  const presentationRun = useRef(0);
   const [error, setError] = useState<string | null>(null);
   const [deploymentError, setDeploymentError] = useState<string | null>(null);
   const [revision, setRevision] = useState(0);
@@ -152,13 +162,18 @@ export default function App() {
     result?.account_id === account && result.caseId === caseId ? result : null;
   const currentOpening = selectedResult ?? selectedActive;
   const displayedAssets = currentOpening ? assets(currentOpening) : [];
-  const phase: StagePhase = animating
-    ? "opening"
-    : currentOpening?.reward !== null && currentOpening?.reward !== undefined
-      ? "open"
-      : selectedActive || uncertain
-        ? "sealed"
-        : "idle";
+  const phase: StagePhase = presentation !== "idle"
+    ? presentation
+    : selectedActive?.reward === null || uncertain
+      ? "sealed"
+      : "idle";
+
+  useEffect(() => {
+    presentationRun.current++;
+    setPresentation("idle");
+    setAnimating(false);
+    return () => { presentationRun.current++; };
+  }, [account, caseId, view]);
 
   useEffect(() => {
     let disposed = false;
@@ -263,6 +278,7 @@ export default function App() {
                 : null);
             if (abort.signal.aborted || accountRef.current !== account) return;
             if (found) {
+              clearNativePending(localStorage, key);
               setUncertain(null);
               setResult(found);
             } else setUncertain(saved);
@@ -434,23 +450,27 @@ export default function App() {
       return;
     setResult(opened);
     if (opened.reward === null) return;
+    const run = ++presentationRun.current;
+    const current = () => run === presentationRun.current &&
+      accountRef.current === opened.account_id && caseRef.current === opened.caseId;
     setAnimating(true);
-    const duration = window.matchMedia("(prefers-reduced-motion: reduce)")
-      .matches
-      ? 300
-      : tier.openMs;
-    sound.open(
-      duration,
-      CASES.findIndex((row) => row.id === caseId),
-    );
+    setPresentation("opening");
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const duration = reduced ? 300 : tier.openMs;
+    sound.open(duration, CASES.findIndex((row) => row.id === caseId));
     await wait(duration);
-    if (
-      accountRef.current === opened.account_id &&
-      caseRef.current === opened.caseId
-    )
-      sound.reveal(RARITY_INDEX[opened.tier ?? "Common"] ?? 0);
+    if (!current()) return;
+    setPresentation("open");
+    sound.reveal(RARITY_INDEX[opened.tier ?? "Common"] ?? 0);
+    await wait(reduced ? 1000 : 4500);
+    if (!current()) return;
+    setPresentation("closing");
+    await wait(reduced ? 100 : 1200);
+    if (!current()) return;
+    setPresentation("idle");
     setAnimating(false);
   }
+
   async function pollOpening(owner: string, nonce: string) {
     for (
       let attempt = 0;
@@ -464,6 +484,7 @@ export default function App() {
         return;
       const found = rows.find((row) => row.nonce === nonce);
       if (found) {
+        clearNativePending(localStorage, nativePendingKey(definition, owner));
         setUncertain(null);
         if (found.reward !== null || attempt === 19) {
           await present(found);
@@ -547,6 +568,12 @@ export default function App() {
         await pollOpening(account, fresh.nonce);
         sound.buy();
       } catch (reason) {
+        // Only a local preflight failure proves the wallet never submitted this intent.
+        if (reason instanceof WalletPreflightError) {
+          clearNativePending(localStorage, key);
+          if (accountRef.current === account && caseRef.current === definition.id)
+            setUncertain(null);
+        }
         throw reason;
       }
     });
@@ -630,10 +657,13 @@ export default function App() {
         account,
         fresh,
       );
+      const retryIntent: NativePending = { ...uncertain, call, hash: null };
+      saveNativePending(localStorage, nativePendingKey(definition, account), retryIntent);
+      setUncertain(retryIntent);
       const response = await sign(call, account);
       const hash = walletTransactionHash(response);
       if (hash) {
-        const saved = { ...uncertain, hash };
+        const saved = { ...retryIntent, hash };
         saveNativePending(
           localStorage,
           nativePendingKey(definition, account),
@@ -691,6 +721,16 @@ export default function App() {
     }));
   }
 
+  useEffect(() => {
+    const abort = new AbortController();
+    const rows = [...global, ...personal];
+    void Promise.all(CLIENTS.map(source => nativeOpeningTransactions(source, rows.filter(row => row.caseId === source.definition.id), abort.signal)))
+      .then(results => {
+        if (!abort.signal.aborted) setTransactionLinks(previous => Object.assign({}, previous, ...results));
+      });
+    return () => abort.abort();
+  }, [global, personal]);
+
   const primary = !account
     ? {
         label: "Connect NEAR Wallet",
@@ -699,7 +739,7 @@ export default function App() {
       }
     : selectedActive?.status === "Claimable"
       ? {
-          label: "Claim Reward Payout",
+          label: "Retry reward payout",
           action: () => selectedActive && recover(selectedActive),
           disabled: false,
         }
@@ -723,7 +763,7 @@ export default function App() {
               }
             : selectedResult
               ? {
-                  label: "Summon Another Case",
+                  label: "Open another case",
                   action: () => {
                     if (account)
                       clearNativePending(
@@ -736,7 +776,7 @@ export default function App() {
                   disabled: false,
                 }
               : {
-                  label: `Unleash Gravity · ${fmt(definition.price)}`,
+                  label: `Open for ${fmt(definition.price)}`,
                   action: buy,
                   disabled: !verified || !quote?.can_open,
                 };
@@ -749,15 +789,17 @@ export default function App() {
 
   return (
     <div
-      className="relative min-h-dvh overflow-hidden bg-bg text-label"
+      className="relative min-h-dvh overflow-clip bg-bg text-label"
       style={{ "--tier": tier.ui } as CSSProperties}
     >
-      <div className="stage-glow fixed inset-0 z-0" data-stage>
+      {view === "cases" ? <div className="stage-glow fixed inset-0 z-0" data-stage data-phase={phase}>
         <CaseStage
           tier={tier}
           phase={phase}
+          rewardRarity={currentOpening?.tier ?? null}
+          rewardLabel={currentOpening?.reward ? `${fmt(currentOpening.reward)}${currentOpening.bonus ? ` + ${formatAmount(currentOpening.bonus.amount, currentOpening.bonus.token_decimals)} ${currentOpening.bonus.token_symbol}` : ""}` : null}
           rewardColor={
-            currentOpening?.tier && !animating
+            currentOpening?.tier && phase === "open"
               ? RARITY_COLOR[currentOpening.tier]
               : null
           }
@@ -765,7 +807,7 @@ export default function App() {
             window.matchMedia("(prefers-reduced-motion: reduce)").matches
           }
         />
-      </div>
+      </div> : <div className="home-atmosphere fixed inset-0" aria-hidden="true" />}
       <header className="material-bar fixed inset-x-0 top-0 z-40">
         <div className="mx-auto flex h-[64px] items-center gap-2 px-3 sm:gap-4 sm:px-6 lg:px-8">
           <div className="mr-auto flex items-center gap-3">
@@ -783,20 +825,23 @@ export default function App() {
                 alt="Fujitora Case Shop Logo"
                 className="h-10 sm:h-11 w-auto rounded-lg shadow-[0_0_18px_rgba(157,78,221,0.55)] object-contain border border-purple-500/40 group-hover:scale-105 transition-transform"
               />
-              <div className="flex flex-col justify-center">
+              <div className="hidden sm:flex flex-col justify-center">
                 <div className="flex items-center gap-2">
                   <span className="font-display font-extrabold text-[13px] sm:text-[16px] tracking-wider text-white">
-                    FUJITORA <span className="text-[#00EC97]">CASE SHOP</span>
+                    FUJITORA <span className="text-[#d7bd89]">CASE SHOP</span>
                   </span>
-                  <span className="hidden items-center gap-1.5 rounded-full bg-[#00EC97]/15 px-2.5 py-0.5 font-mono text-[10px] font-bold text-[#00EC97] border border-[#00EC97]/30 sm:inline-flex">
+                  <span className="hidden items-center gap-1.5 rounded-full bg-[#d7bd89]/15 px-2.5 py-0.5 font-mono text-[10px] font-bold text-[#d7bd89] border border-[#d7bd89]/30 sm:inline-flex">
                     <img src="/near-badge.webp" alt="NEAR" className="size-3.5 object-contain" />
-                    NEAR HACKATHON
+                    NEAR TESTNET
                   </span>
                 </div>
               </div>
             </button>
           </div>
 
+          {PANDA_X_PROFILE && <a href={PANDA_X_PROFILE} target="_blank" rel="noopener noreferrer" aria-label="Panda Coder on X" className="grid size-9 shrink-0 place-items-center rounded-full border border-purple-300/20 text-label-2 transition hover:border-amber-200/50 hover:text-amber-100">
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="currentColor"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.3l8.2-9.4L.8 2h6.5l4.4 6.7L18.9 2Zm-1.1 18h1.7L6.4 3.9H4.6L17.8 20Z" /></svg>
+          </a>}
           {/* Upper Panel Navigation */}
           <nav aria-label="Main Navigation" className="flex items-center rounded-xl bg-purple-500/15 p-1 border border-purple-500/25">
             <button
@@ -837,7 +882,7 @@ export default function App() {
               sound.setMuted(!muted);
               if (muted) sound.tap();
             }}
-            className="grid size-[32px] place-items-center rounded-full text-label-2 hover:bg-fill-3 hover:text-white transition-colors"
+            className="hidden sm:grid size-[32px] place-items-center rounded-full text-label-2 hover:bg-fill-3 hover:text-white transition-colors"
           >
             <Glyph
               name={muted ? "speaker-xmark" : "speaker"}
@@ -847,7 +892,7 @@ export default function App() {
           {account ? (
             <>
               <span
-                className="tnum hidden items-center gap-2 rounded-full bg-[#00EC97]/10 px-3 py-1 font-mono text-[13px] font-semibold text-[#00EC97] border border-[#00EC97]/25 md:inline-flex"
+                className="tnum hidden items-center gap-2 rounded-full bg-[#d7bd89]/10 px-3 py-1 font-mono text-[13px] font-semibold text-[#d7bd89] border border-[#d7bd89]/25 md:inline-flex"
                 data-testid="wallet-balance"
               >
                 <img src="/near-badge.webp" alt="NEAR" className="size-4 object-contain" />
@@ -861,8 +906,8 @@ export default function App() {
                   setInventoryOpen(true);
                 }}
               >
-                <Glyph name="shippingbox" className="size-3.5 text-[#00EC97]" />
-                <span className="hidden sm:inline">My Vault</span>
+                <Glyph name="shippingbox" className="size-3.5 text-[#d7bd89]" />
+                <span className="hidden sm:inline">My openings</span>
               </Button>
               <span
                 className="font-mono text-[12px] text-label-2 hidden max-w-[150px] truncate xl:inline bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/20"
@@ -884,12 +929,13 @@ export default function App() {
               variant="filled"
               size="small"
               onClick={() => void controller.current?.connect()}
+              aria-label="Connect Wallet"
               loading={wallet.busy === "connect"}
               disabled={wallet.status === "initializing"}
               className="gap-2"
             >
               <img src="/near-badge.webp" alt="NEAR" className="size-4 object-contain" />
-              <span>Connect Wallet</span>
+              <span className="hidden sm:inline">Connect Wallet</span><span className="sm:hidden">Connect</span>
             </Button>
           )}
         </div>
@@ -903,11 +949,13 @@ export default function App() {
             }}
             onConnectWallet={() => void controller.current?.connect()}
             account={account}
+            recent={global.map(row => ({ ...row, transactionHash: transactionLinks[row.id] }))}
+            historyError={historyError}
           />
         </main>
       ) : (
-      <div className="pointer-events-none relative z-10 flex min-h-dvh flex-col px-3 pt-[72px] pb-3 sm:px-6 lg:px-8 lg:pt-[82px] lg:pb-8">
-        <div className="pointer-events-auto mx-auto w-full max-w-[760px]">
+      <div className="case-page pointer-events-none relative z-10 flex min-h-dvh flex-col px-3 pt-[72px] pb-3 sm:px-6 lg:px-8 lg:pt-[82px] lg:pb-8">
+        <div className="case-navigation material-bar sticky top-[64px] z-30 pointer-events-auto mx-auto w-full max-w-[760px] rounded-2xl">
           <SegmentedControl
             size="large"
             label="Case tier"
@@ -930,7 +978,7 @@ export default function App() {
                     {t.name}
                   </span>
                   <span className="tnum font-mono text-[10px] sm:text-[11px] font-normal text-label-2 flex items-center gap-0.5">
-                    <span className="text-[#00EC97]">Ⓝ</span>
+                    <span className="text-[#d7bd89]">Ⓝ</span>
                     {fmt(item.price).replace(" NEAR", "")}
                   </span>
                 </span>
@@ -938,12 +986,12 @@ export default function App() {
             }}
           />
         </div>
-        <div key={caseId} className="appear mt-5 max-w-[420px] px-1 lg:mt-8">
+        <div key={caseId} className="case-description appear mt-5 max-w-[420px] px-1 lg:mt-8">
           <div className="flex items-center gap-2 mb-2">
             <span className="font-serif text-[17px] font-bold text-[#c4b5fd] bg-purple-500/20 px-2.5 py-0.5 rounded-lg border border-purple-500/30">
               {tier.kanji}
             </span>
-            <span className="font-mono text-[11px] font-bold text-[#00EC97] tracking-wider uppercase">
+            <span className="font-mono text-[11px] font-bold text-[#d7bd89] tracking-wider uppercase">
               {tier.tagline}
             </span>
           </div>
@@ -957,15 +1005,15 @@ export default function App() {
             <span className="inline-flex items-center gap-1 rounded-full bg-purple-500/15 px-2.5 py-0.5 text-[11px] font-mono font-medium text-purple-300 border border-purple-500/30">
               <span>NCS-0{tier.number}</span>
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#00EC97]/15 px-2.5 py-0.5 text-[11px] font-mono font-semibold text-[#00EC97] border border-[#00EC97]/30">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#d7bd89]/15 px-2.5 py-0.5 text-[11px] font-mono font-semibold text-[#d7bd89] border border-[#d7bd89]/30">
               <img src="/near-badge.webp" alt="NEAR" className="size-3.5 object-contain" />
-              <span>NEAR Verified</span>
+              <span>NEAR Testnet</span>
             </span>
           </div>
         </div>
-        <div className="min-h-[160px] flex-1" />
-        {currentOpening?.reward && !animating && (
-          <div className="material-regular appear pointer-events-auto absolute inset-x-0 bottom-8 mx-auto hidden w-[270px] flex-col gap-3 rounded-[20px] p-4 border border-purple-500/40 shadow-[0_0_35px_rgba(0,236,151,0.25)] lg:flex">
+
+        {currentOpening?.reward && phase === "open" && (
+          <div className="material-regular appear pointer-events-auto absolute inset-x-0 bottom-8 mx-auto hidden w-[270px] flex-col gap-3 rounded-[20px] p-4 border border-purple-500/40 shadow-[0_0_35px_rgba(215,189,137,0.25)] lg:flex">
             <div className="flex items-center justify-between">
               <span
                 className="font-display text-[12px] font-extrabold tracking-wider uppercase"
@@ -983,9 +1031,14 @@ export default function App() {
             </span>
           </div>
         )}
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mobile-purchase pointer-events-auto">
+          <Button variant="filled" size="large" className="w-full" aria-label={account ? "Selected case action" : "Connect wallet for selected case"} onClick={primary.action} loading={busy} disabled={primary.disabled}>
+            {pending ?? (animating ? "Revealing on-chain reward…" : primary.label)}
+          </Button>
+        </div>
+        <div className="case-bottom flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <History
-            entries={global}
+            entries={global.map(row => ({ ...row, transactionHash: transactionLinks[row.id] }))}
             me={account ?? undefined}
             error={historyError}
             onMore={
@@ -993,7 +1046,7 @@ export default function App() {
                 ? () => void moreHistory(false)
                 : undefined
             }
-            className="pointer-events-auto self-start lg:self-end"
+            className="case-activity pointer-events-auto self-start lg:self-end"
           />
           <aside
             aria-label="Case controls"
@@ -1007,10 +1060,10 @@ export default function App() {
                 <span className="font-display text-[26px] font-black tnum text-white flex items-center gap-2 mt-0.5">
                   <img src="/near-badge.webp" alt="NEAR" className="size-6 object-contain" />
                   {fmt(definition.price).replace(" NEAR", "")}
-                  <span className="font-mono text-[14px] font-normal text-[#00EC97]">NEAR</span>
+                  <span className="font-mono text-[14px] font-normal text-[#d7bd89]">NEAR</span>
                 </span>
                 <span className="t-caption text-label-3 font-mono">
-                  Smart Contract · Zero-Lag
+                  Native NEAR · Testnet
                 </span>
               </div>
               <span className="t-footnote flex items-center gap-1.5 rounded-full bg-purple-500/15 border border-purple-500/25 px-3 py-1 font-mono text-[11px] text-white">
@@ -1049,7 +1102,7 @@ export default function App() {
                     accessory={
                       <span className="tnum font-mono text-[12px]">
                         {percent(quote[reward.probability])} ·{" "}
-                        <span className="text-[#00EC97] font-semibold">{fmt(reward.amount)}</span>
+                        <span className="text-[#d7bd89] font-semibold">{fmt(reward.amount)}</span>
                       </span>
                     }
                   />
@@ -1063,7 +1116,7 @@ export default function App() {
                     </p>
                   ))}
                   <p className="mt-1.5 text-label-3 text-[11px]">
-                    Provably-fair on-chain selection. Probabilities from live contract quote.
+                    On-chain Testnet selection. Probabilities from the current contract quote.
                   </p>
                 </div>
               </Section>
@@ -1073,7 +1126,7 @@ export default function App() {
                 <div className="px-4 py-3">
                   <div className="t-footnote mb-2 font-display font-bold text-white flex items-center justify-between">
                     <span>{currentOpening?.tier} Reward</span>
-                    <span className="font-mono text-[11px] text-[#00EC97]">#{currentOpening?.opening_id}</span>
+                    <span className="font-mono text-[11px] text-[#d7bd89]">#{currentOpening?.opening_id}</span>
                   </div>
                   <BundleList assets={displayedAssets} />
                   <p className="t-caption mt-2 text-label-3">
@@ -1158,7 +1211,7 @@ export default function App() {
       <Inventory
         open={inventoryOpen}
         onOpenChange={setInventoryOpen}
-        items={personal.filter((row) => row.accountId === account)}
+        items={personal.filter((row) => row.accountId === account).map(row => ({ ...row, transactionHash: transactionLinks[row.id] }))}
         error={personalError}
         busy={busy}
         onRecover={recover}

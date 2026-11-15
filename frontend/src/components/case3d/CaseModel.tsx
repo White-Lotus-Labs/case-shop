@@ -405,10 +405,10 @@ function labelTexture(t: TierVisual) {
 
   g.textBaseline = 'middle'
   
-  // Top header: Fujitora x NEAR Hackathon
+  // Top header: Fujitora Case Shop
   g.textAlign = 'left'
   g.letterSpacing = '4px'
-  engrave('FUJITORA × NEAR HACKATHON', 52, 54, 22, 700, 0.75)
+  engrave('FUJITORA CASE SHOP', 52, 54, 22, 700, 0.75)
   
   // Center: Case name
   g.letterSpacing = '10px'

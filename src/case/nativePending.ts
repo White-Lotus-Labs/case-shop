@@ -161,7 +161,7 @@ export function observeNativePending(
   );
 }
 
-/** Re-sign the original nonce only. A late original and its retry cannot both open. */
+/** Renew the quote, retaining the original nonce so only one attempt can open. */
 export function retryOriginalNativeCall(
   pending: NativePending,
   definition: NativeCaseDefinition,
@@ -177,5 +177,13 @@ export function retryOriginalNativeCall(
     throw new Error(
       "Check finalized history for the original opening before retrying.",
     );
-  return structuredClone(pending.call);
+  if (!currentQuote.can_open || currentQuote.required_deposit !== pending.call.deposit)
+    throw new Error(currentQuote.reason ?? "The original purchase deposit changed. Verify its transaction first.");
+  return {
+    ...structuredClone(pending.call),
+    args: {
+      nonce: pending.nonce,
+      quote: { revision: currentQuote.revision, expires_at: currentQuote.expires_at },
+    },
+  };
 }

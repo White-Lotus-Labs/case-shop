@@ -92,7 +92,11 @@ export async function signTestnetFunctionCall(
     !/^[0-9]+$/.test(call.deposit)
   )
     throw new WalletPreflightError("Invalid contract call.");
-  const accounts = await wallet.getAccounts({ network: "testnet" });
+  const accounts = await wallet.getAccounts({ network: "testnet" }).catch(() => {
+    throw new WalletPreflightError(
+      "Could not verify your Testnet wallet account. No purchase was submitted. Reconnect and try again.",
+    );
+  });
   if (
     !isCurrent() ||
     !accounts.some((account) => account.accountId === accountId) ||

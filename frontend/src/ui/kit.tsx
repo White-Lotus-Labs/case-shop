@@ -50,7 +50,7 @@ export function Glyph({ name, className = 'size-4' }: { name: GlyphName; classNa
         <rect x="2.5" y="2.5" width="11" height="11" rx="2.5" strokeWidth="1.5" />
         <circle cx="5.5" cy="5.5" r="1" fill="currentColor" stroke="none" />
         <circle cx="10.5" cy="10.5" r="1" fill="currentColor" stroke="none" />
-        <circle cx="8" cy="8" r="1.2" fill="#00EC97" stroke="none" />
+        <circle cx="8" cy="8" r="1.2" fill="#d7bd89" stroke="none" />
       </>
     ),
     sparkle: (
@@ -109,11 +109,11 @@ type ButtonVariant = 'filled' | 'tinted' | 'gray' | 'plain' | 'purple'
 type ButtonSize = 'small' | 'medium' | 'large'
 
 const BUTTON_VARIANT: Record<ButtonVariant, string> = {
-  filled: 'bg-gradient-to-r from-[#00EC97] to-[#00c982] text-[#060818] font-bold tracking-[0.02em] shadow-[0_0_20px_rgba(0,236,151,0.35)] enabled:hover:shadow-[0_0_28px_rgba(0,236,151,0.6)] enabled:hover:scale-[1.01] disabled:bg-fill-3 disabled:text-label-3',
+  filled: 'bg-gradient-to-r from-[#d7bd89] to-[#ad895d] text-[#060818] font-bold tracking-[0.02em] shadow-[0_0_20px_rgba(215,189,137,0.35)] enabled:hover:shadow-[0_0_28px_rgba(215,189,137,0.6)] enabled:hover:scale-[1.01] disabled:bg-fill-3 disabled:text-label-3',
   purple: 'bg-gradient-to-r from-[#9d4edd] to-[#7928ca] text-white font-bold tracking-[0.02em] shadow-[0_0_20px_rgba(157,78,221,0.35)] enabled:hover:shadow-[0_0_28px_rgba(157,78,221,0.6)] enabled:hover:scale-[1.01] disabled:bg-fill-3 disabled:text-label-3',
-  tinted: 'bg-[#00EC97]/15 text-[#00EC97] border border-[#00EC97]/30 enabled:hover:bg-[#00EC97]/25 enabled:hover:border-[#00EC97]/60 disabled:bg-fill-3 disabled:text-label-3',
+  tinted: 'bg-[#d7bd89]/15 text-[#d7bd89] border border-[#d7bd89]/30 enabled:hover:bg-[#d7bd89]/25 enabled:hover:border-[#d7bd89]/60 disabled:bg-fill-3 disabled:text-label-3',
   gray: 'bg-fill-3 text-label border border-purple-500/15 enabled:hover:bg-fill-2 enabled:hover:border-purple-500/30 disabled:text-label-3',
-  plain: 'text-[#00EC97] enabled:hover:text-[#4df5b5] disabled:text-label-3',
+  plain: 'text-[#d7bd89] enabled:hover:text-[#4df5b5] disabled:text-label-3',
 }
 
 const BUTTON_SIZE: Record<ButtonSize, string> = {
@@ -228,7 +228,7 @@ export function SegmentedControl<T extends string>({
             onClick={() => onChange(o)}
             className={cx(
               'relative z-10 flex min-w-0 items-center justify-center rounded-[8px] px-2 text-[13px] tracking-[-0.006em] outline-offset-0 transition-all disabled:cursor-not-allowed',
-              selected ? 'font-bold text-white drop-shadow-[0_0_8px_rgba(0,236,151,0.4)]' : 'font-medium text-label-2 hover:text-white',
+              selected ? 'font-bold text-white drop-shadow-[0_0_8px_rgba(215,189,137,0.4)]' : 'font-medium text-label-2 hover:text-white',
             )}
           >
             {renderOption ? renderOption(o, selected) : o}
@@ -350,13 +350,13 @@ export function Sheet({
       }}
     >
       <header className="hairline-b grid h-14 shrink-0 grid-cols-[1fr_auto_1fr] items-center px-4 bg-[#0a0d24]">
-        <div className="flex items-center gap-1.5 text-[#00EC97]">
+        <div className="flex items-center gap-1.5 text-[#d7bd89]">
           <Glyph name="near" className="size-4" />
-          <span className="font-display text-[11px] font-bold tracking-wider">HACKATHON</span>
+          <span className="font-display text-[11px] font-bold tracking-wider">TESTNET</span>
         </div>
         <h2 className="font-display text-[16px] font-bold tracking-wide text-white">{title}</h2>
         <div className="flex justify-end">
-          <Button variant="plain" size="small" onClick={onClose} className="font-semibold text-[#00EC97]">
+          <Button variant="plain" size="small" onClick={onClose} className="font-semibold text-[#d7bd89]">
             Close
           </Button>
         </div>

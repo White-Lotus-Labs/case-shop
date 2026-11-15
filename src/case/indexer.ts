@@ -116,7 +116,7 @@ export function parseIndexedPage(raw: unknown, accountId: string): IndexerPage {
         source: INDEXER_SOURCE,
       };
     }),
-    nextCursor: indexerCursor(object(page.meta).next_page),
+    nextCursor: page.meta === undefined ? null : indexerCursor(object(page.meta).next_page),
     source: INDEXER_SOURCE,
   };
 }

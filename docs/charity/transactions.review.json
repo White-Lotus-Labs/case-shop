@@ -1,0 +1,104 @@
+{
+  "network": "testnet",
+  "approvalRequired": true,
+  "executed": false,
+  "wasmSha256": "f9ae627173ded178723f20dc3006a7869c6195fa66dabd7353972f8d752e91b1",
+  "wasmPath": "contracts/target/wasm32-unknown-unknown/release/near_native_case_pool.wasm",
+  "transactions": [
+    {
+      "action": "deploy-reviewed-code-without-init-or-migration",
+      "accountId": "native-bamboo.needmore_1_near.testnet",
+      "authority": "Existing contract-account upgrade authority",
+      "approvalRequired": true
+    },
+    {
+      "action": "FunctionCall",
+      "signerId": "needmore_1_near.testnet",
+      "receiverId": "native-bamboo.needmore_1_near.testnet",
+      "methodName": "activate_charity",
+      "args": {
+        "treasury_id": "fujitora-paws.needmore_1_near.testnet"
+      },
+      "gas": "60000000000000",
+      "depositAtTestedStoragePrice": "5120000000000000000000",
+      "recheckBeforeSigning": "charity_storage_cost",
+      "approvalRequired": true
+    },
+    {
+      "action": "deploy-reviewed-code-without-init-or-migration",
+      "accountId": "native-dragon.needmore_1_near.testnet",
+      "authority": "Existing contract-account upgrade authority",
+      "approvalRequired": true
+    },
+    {
+      "action": "FunctionCall",
+      "signerId": "needmore_1_near.testnet",
+      "receiverId": "native-dragon.needmore_1_near.testnet",
+      "methodName": "activate_charity",
+      "args": {
+        "treasury_id": "fujitora-paws.needmore_1_near.testnet"
+      },
+      "gas": "60000000000000",
+      "depositAtTestedStoragePrice": "5120000000000000000000",
+      "recheckBeforeSigning": "charity_storage_cost",
+      "approvalRequired": true
+    },
+    {
+      "action": "deploy-reviewed-code-without-init-or-migration",
+      "accountId": "native-moon.needmore_1_near.testnet",
+      "authority": "Existing contract-account upgrade authority",
+      "approvalRequired": true
+    },
+    {
+      "action": "FunctionCall",
+      "signerId": "needmore_1_near.testnet",
+      "receiverId": "native-moon.needmore_1_near.testnet",
+      "methodName": "activate_charity",
+      "args": {
+        "treasury_id": "fujitora-paws.needmore_1_near.testnet"
+      },
+      "gas": "60000000000000",
+      "depositAtTestedStoragePrice": "5120000000000000000000",
+      "recheckBeforeSigning": "charity_storage_cost",
+      "approvalRequired": true
+    },
+    {
+      "action": "deploy-reviewed-code-without-init-or-migration",
+      "accountId": "native-phoenix.needmore_1_near.testnet",
+      "authority": "Existing contract-account upgrade authority",
+      "approvalRequired": true
+    },
+    {
+      "action": "FunctionCall",
+      "signerId": "needmore_1_near.testnet",
+      "receiverId": "native-phoenix.needmore_1_near.testnet",
+      "methodName": "activate_charity",
+      "args": {
+        "treasury_id": "fujitora-paws.needmore_1_near.testnet"
+      },
+      "gas": "60000000000000",
+      "depositAtTestedStoragePrice": "5120000000000000000000",
+      "recheckBeforeSigning": "charity_storage_cost",
+      "approvalRequired": true
+    },
+    {
+      "action": "deploy-reviewed-code-without-init-or-migration",
+      "accountId": "native-reserve.needmore_1_near.testnet",
+      "authority": "Existing contract-account upgrade authority",
+      "approvalRequired": true
+    },
+    {
+      "action": "FunctionCall",
+      "signerId": "needmore_1_near.testnet",
+      "receiverId": "native-reserve.needmore_1_near.testnet",
+      "methodName": "activate_charity",
+      "args": {
+        "treasury_id": "fujitora-paws.needmore_1_near.testnet"
+      },
+      "gas": "60000000000000",
+      "depositAtTestedStoragePrice": "5120000000000000000000",
+      "recheckBeforeSigning": "charity_storage_cost",
+      "approvalRequired": true
+    }
+  ]
+}

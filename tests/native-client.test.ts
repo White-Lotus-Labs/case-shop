@@ -34,6 +34,7 @@ function opening() {
     account_id: "alice.testnet",
     nonce: "0",
     accepted_height: "100",
+    accepted_timestamp: "1794693195272190981",
     accepted_revision: "1",
     common: 700000,
     rare: 250000,
@@ -446,4 +447,19 @@ describe("native wallet recovery", () => {
       ),
     ).toThrow("key mismatch");
   });
+});
+
+it('preserves the finalized contract timestamp for opening history', () => {
+  expect(parseNativeOpening({ ...opening(), accepted_timestamp: '1794693195272190981' }, definition))
+    .toHaveProperty('accepted_timestamp', '1794693195272190981');
+});
+
+it('renews an expired quote while preserving the original purchase nonce', () => {
+  const original = pending();
+  const retry = retryOriginalNativeCall(original, definition, 'alice.testnet', {
+    ...quote(), revision: '7', expires_at: '900',
+  });
+  expect(retry.args).toEqual({ nonce: '0', quote: { revision: '7', expires_at: '900' } });
+  expect(retry.deposit).toBe(original.call.deposit);
+  expect(original.call.args).toEqual({ nonce: '0', quote: { revision: '1', expires_at: '220' } });
 });

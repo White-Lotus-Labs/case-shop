@@ -1,0 +1,144 @@
+{
+  "network": "testnet",
+  "accountId": "needmore_1_near.testnet",
+  "budgetYocto": "15000000000000000000000000",
+  "transactions": [
+    {
+      "caseId": "bamboo-mist",
+      "method": "open",
+      "receiver": "native-bamboo.needmore_1_near.testnet",
+      "deposit": "90960000000000000000000",
+      "gasReserved": "500000000000000000000000",
+      "status": "verified",
+      "hash": "C6zv1CUGtKcXMBq8heYwMrev5Jr6rTLF4G4G3LDGBcHB",
+      "gasSpent": "1427895753699500000000",
+      "beforeBlock": "277820008",
+      "args": {
+        "nonce": "1",
+        "quote": {
+          "revision": "9",
+          "expires_at": "277820128"
+        }
+      },
+      "gas": "250000000000000"
+    },
+    {
+      "caseId": "dragon-tea",
+      "method": "open",
+      "receiver": "native-dragon.needmore_1_near.testnet",
+      "deposit": "140960000000000000000000",
+      "gasReserved": "500000000000000000000000",
+      "status": "verified",
+      "hash": "8TMEMGLqxu9rX3EepqjE6xiJ6mBTGNCNu7qYdPrMBE5e",
+      "gasSpent": "1374747774810500000000",
+      "beforeBlock": "277820020",
+      "args": {
+        "nonce": "1",
+        "quote": {
+          "revision": "8",
+          "expires_at": "277820140"
+        }
+      },
+      "gas": "250000000000000"
+    },
+    {
+      "caseId": "moon-spirit",
+      "method": "open",
+      "receiver": "native-moon.needmore_1_near.testnet",
+      "deposit": "240960000000000000000000",
+      "gasReserved": "500000000000000000000000",
+      "status": "verified",
+      "hash": "4UNFZd4fGtyaAn5Sjh2ToGo5bfJ8GiZk6TMBf2TTMWiM",
+      "gasSpent": "1446967457280600000000",
+      "beforeBlock": "277820032",
+      "args": {
+        "nonce": "2",
+        "quote": {
+          "revision": "13",
+          "expires_at": "277820152"
+        }
+      },
+      "gas": "250000000000000"
+    },
+    {
+      "caseId": "phoenix-flame",
+      "method": "open",
+      "receiver": "native-phoenix.needmore_1_near.testnet",
+      "deposit": "540960000000000000000000",
+      "gasReserved": "500000000000000000000000",
+      "status": "verified",
+      "hash": "HyU2hG5HgMKuaZWRfut7vCu2wQcPKWzS3XXnnQazmAdu",
+      "gasSpent": "1464490957158200000000",
+      "beforeBlock": "277820044",
+      "args": {
+        "nonce": "1",
+        "quote": {
+          "revision": "11",
+          "expires_at": "277820164"
+        }
+      },
+      "gas": "250000000000000"
+    },
+    {
+      "caseId": "uncles-secret-reserve",
+      "method": "open",
+      "receiver": "native-reserve.needmore_1_near.testnet",
+      "deposit": "1040960000000000000000000",
+      "gasReserved": "500000000000000000000000",
+      "status": "verified",
+      "hash": "9v5NZXphFTAi6bFbgmA6Ghg8ebhtnWFFuHUQpJ1JHzVy",
+      "gasSpent": "1505133249793200000000",
+      "beforeBlock": "277820056",
+      "args": {
+        "nonce": "3",
+        "quote": {
+          "revision": "18",
+          "expires_at": "277820176"
+        }
+      },
+      "gas": "250000000000000"
+    }
+  ],
+  "openings": [
+    {
+      "caseId": "bamboo-mist",
+      "nonce": "1",
+      "openingId": "1",
+      "status": "Completed",
+      "reward": "20000000000000000000000",
+      "tier": "Common"
+    },
+    {
+      "caseId": "dragon-tea",
+      "nonce": "1",
+      "openingId": "1",
+      "status": "Completed",
+      "reward": "100000000000000000000000",
+      "tier": "Rare"
+    },
+    {
+      "caseId": "moon-spirit",
+      "nonce": "2",
+      "openingId": "2",
+      "status": "Completed",
+      "reward": "10000000000000000000000",
+      "tier": "Common"
+    },
+    {
+      "caseId": "phoenix-flame",
+      "nonce": "1",
+      "openingId": "1",
+      "status": "Completed",
+      "reward": "350000000000000000000000",
+      "tier": "Rare"
+    },
+    {
+      "caseId": "uncles-secret-reserve",
+      "nonce": "3",
+      "openingId": "3",
+      "status": "Completed",
+      "reward": "1500000000000000000000000",
+      "tier": "Rare"
+    }
+  ]
+}
