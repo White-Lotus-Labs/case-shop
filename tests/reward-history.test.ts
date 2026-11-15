@@ -15,7 +15,7 @@ import type { PendingAction } from '../src/case/pending';
 
 const deployment: Deployment = {
   network: 'testnet',
-  rpcUrl: 'https://rpc.testnet.fastnear.com',
+  rpcUrl: 'https://near-testnet.drpc.org',
   tokenContractId: 'usdi.testnet',
   caseContractId: 'case.testnet',
 };

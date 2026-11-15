@@ -13,6 +13,16 @@ export interface HistoryEntry {
   caseId: string;
   openingId: string;
   height: string;
+  nonce: string;
+  transactionHash?: string;
+  timestamp: string;
+  tier: string | null;
+  spent: string;
   status: string;
   assets: BundleAsset[];
+}
+
+export function openingTime(timestamp: string) {
+  const date = new Date(Number(BigInt(timestamp) / 1_000_000n));
+  return { iso: date.toISOString(), label: date.toLocaleString() };
 }

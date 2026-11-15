@@ -202,7 +202,11 @@ try {
   await page.goto(origin);
   await page
     .getByRole("button", { name: "Connect Wallet", exact: true })
-    .click();
+    .click().catch(async (error) => {
+      console.error((await page.locator("body").innerText()).slice(0, 6000));
+      await page.screenshot({ path: "/private/tmp/fujitora-sandbox-failure.png" });
+      throw error;
+    });
   await page
     .getByTestId("wallet-balance")
     .waitFor()
@@ -232,10 +236,14 @@ try {
     await buy.waitFor();
     await buy.click({ timeout: 30000 });
     await page
-      .getByText("Rewards were transferred directly to your wallet.", {
+      .getByText("Rewards transferred directly to your NEAR wallet.", {
         exact: true,
       })
       .waitFor({ timeout: 90000 });
+    await page.locator('[data-stage][data-phase="idle"]').waitFor({ timeout: 30000 });
+    assert.equal(await page.getByText("Verified on-chain reward", { exact: true }).count(), 0);
+    const savedIntents = await page.evaluate(() => Object.keys(localStorage).filter(key => key.startsWith("case-shop:native-v1:")).length);
+    assert.equal(savedIntents, 0, "Confirmed opening left a saved purchase blocker");
     const history = await sandbox.chain.view(
       definition.contractId,
       "get_history",
@@ -260,6 +268,11 @@ try {
       .getByRole("button", { name: "Open another case", exact: true })
       .click();
   }
+  await page.getByRole("button", { name: "Homepage", exact: true }).click();
+  assert.equal(await page.locator('[data-stage]').count(), 0, "Homepage retained the previous 3D case");
+  await page.getByRole("heading", { name: "Open Cases. Help Paws. 🐾", exact: true }).waitFor();
+  await page.getByRole("button", { name: "Cases", exact: true }).click();
+  evidence.checks.push("Every reveal returned to idle, cleared its confirmed intent, and homepage unmounted the case scene.");
   await page.getByRole("radio", { name: /Bamboo Mist/ }).click();
   loseNextResponse = true;
   await page
@@ -271,11 +284,9 @@ try {
     })
     .waitFor({ timeout: 90000 });
   await page.reload();
-  await page
-    .getByText("Rewards were transferred directly to your wallet.", {
-      exact: true,
-    })
-    .waitFor({ timeout: 30000 });
+  await page.getByTestId("wallet-balance").waitFor({ timeout: 30000 });
+  const recoveredOriginal = await sandbox.chain.view(nativeCaseCatalog[0].contractId, "get_history", { account_id: sandbox.player.accountId, limit: 20 });
+  assert.ok(Array.isArray(recoveredOriginal) && recoveredOriginal.length === 2 && recoveredOriginal.every(row => row.status === "Completed"));
   evidence.checks.push(
     "A missing wallet response survived refresh and recovered the original finalized nonce without another purchase.",
   );
@@ -293,7 +304,7 @@ try {
   await page.getByRole("button", { name: /Live Activity/ }).click();
   await page
     .getByRole("region", { name: "Activity from all players" })
-    .getByText("Global opening history")
+    .getByText("Live On-Chain Openings")
     .waitFor();
   evidence.checks.push(
     "Global history displayed real finalized openings across all five contracts.",
@@ -306,7 +317,7 @@ try {
     return bridge.__switchSandboxWallet("bob.testnet");
   });
   await page.getByRole("button", { name: "My openings", exact: true }).click();
-  await page.getByText("No openings yet", { exact: true }).waitFor();
+  await page.getByText("No Openings Yet", { exact: true }).waitFor();
   evidence.checks.push(
     "Switching wallets removed the previous player results and personal history.",
   );
@@ -334,7 +345,7 @@ try {
     .getByRole("button", { name: "Retry reward payout", exact: true })
     .click({ timeout: 30000 });
   await page
-    .getByText("Rewards were transferred directly to your wallet.", {
+    .getByText("Rewards transferred directly to your NEAR wallet.", {
       exact: true,
     })
     .waitFor({ timeout: 90000 });
@@ -366,6 +377,13 @@ try {
     fullPage: true,
   });
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate(() => window.scrollTo(0, 600));
+  const navigation = await page.locator('.case-navigation').boundingBox();
+  assert.ok(navigation && Math.abs(navigation.y - 64) < 2, "Mobile selector did not stay below the header");
+  assert.ok(await page.getByRole('button', { name: 'Selected case action', exact: true }).isVisible(), "Mobile purchase action is unavailable");
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), "Mobile page overflows horizontally");
+  evidence.checks.push("390px mobile navigation remains sticky at 64px and its purchase dock remains accessible without horizontal overflow.");
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: "docs/native/evidence/browser-mobile.png",
     fullPage: true,

@@ -2,30 +2,24 @@
 // Every animated value is damped inside one frame loop, so idle → hover → opening → open
 // blend continuously instead of jumping between states.
 
-import { ContactShadows, Environment, Lightformer, PerformanceMonitor } from '@react-three/drei'
+import { ContactShadows, Environment, Html, Lightformer, PerformanceMonitor, Sparkles } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
-import { TIERS, type TierVisual } from '@/lib/tiers'
-import { CaseModel, DIM, SEAM, precompileTiers } from './CaseModel'
+import type { NativeTier } from '../../../../src/case/nativeCatalog'
+import type { TierVisual } from '@/lib/tiers'
+import { DIM, SEAM } from './CaseModel'
+import { ThemedCaseModel } from './ThemedCaseModel'
 
-/** Once the studio is lit, compile the other tiers' shaders in the background */
-function PrecompileTiers() {
-  const { gl, camera, scene } = useThree()
-  useEffect(() => {
-    const id = setTimeout(() => void precompileTiers(gl, camera, scene, Object.values(TIERS)).catch(() => {}), 600)
-    return () => clearTimeout(id)
-  }, [gl, camera, scene])
-  return null
-}
-
-export type StagePhase = 'idle' | 'sealed' | 'opening' | 'open'
+export type StagePhase = 'idle' | 'sealed' | 'opening' | 'open' | 'closing'
 
 interface StageProps {
   tier: TierVisual
   phase: StagePhase
   /** Color of the best revealed item; shows the reward core rising out of the case */
   rewardColor: string | null
+  rewardLabel: string | null
+  rewardRarity: NativeTier | null
   reducedMotion: boolean
   /** Clicking the case triggers this (used to open sealed cases) */
   onActivate?: () => void
@@ -80,7 +74,7 @@ function Backdrop({ tier }: { tier: TierVisual }) {
   useEffect(() => () => mat.dispose(), [mat])
   return (
     <>
-      <color attach="background" args={['#060818']} />
+      <color attach="background" args={['#08060e']} />
       <mesh material={mat} position={[0, 0.2, -6]} scale={[32, 20, 1]}>
         <planeGeometry />
       </mesh>
@@ -112,7 +106,7 @@ function Studio({ tier, reducedMotion }: { tier: TierVisual; reducedMotion: bool
   )
 }
 
-function CaseRig({ tier, phase, rewardColor, reducedMotion, onActivate }: StageProps) {
+function CaseRig({ tier, phase, rewardColor, rewardLabel, rewardRarity, reducedMotion, onActivate }: StageProps) {
   const root = useRef<THREE.Group>(null)
   const lid = useRef<THREE.Group>(null)
   const levers = useRef<(THREE.Group | null)[]>([])
@@ -155,7 +149,7 @@ function CaseRig({ tier, phase, rewardColor, reducedMotion, onActivate }: StageP
     const dist = narrow ? Math.max(9, fitWidth(0.72)) : Math.max(10, fitWidth(0.34))
     camera.position.set(0, (1.3 * dist) / 6.6, dist)
     camera.lookAt(0, -0.08, 0)
-    persp.setViewOffset(size.width, size.height, 0, size.height * (narrow ? 0.075 : 0.03), size.width, size.height)
+    persp.setViewOffset(size.width, size.height, 0, size.height * (narrow ? -0.05 : 0.03), size.width, size.height)
     persp.updateProjectionMatrix()  }, [size, camera])
 
   useEffect(() => () => void (document.body.style.cursor = ''), [])
@@ -211,7 +205,29 @@ function CaseRig({ tier, phase, rewardColor, reducedMotion, onActivate }: StageP
       g.rotation.z = -v.hover * 0.015
       g.scale.setScalar(0.86 + 0.14 * e)
     }
-    if (lid.current) lid.current.rotation.x = -v.lid * 1.95
+    if (lid.current) {
+      const hinge = lid.current;
+      // Each silhouette has its own mechanical motion, all driven by verified presentation state.
+      hinge.rotation.set(0, 0, 0);
+      hinge.position.y = SEAM;
+      hinge.position.z = tier.id === 'silver' ? -0.91 : -0.85;
+      if (tier.id === 'bronze') {
+        hinge.position.y += v.lid * .95;
+        hinge.rotation.y = v.lid * .12;
+      } else if (tier.id === 'gold') {
+        hinge.position.y += v.lid * .7;
+        hinge.rotation.y = v.lid * Math.PI;
+      } else if (tier.id === 'platinum') {
+        hinge.position.y += v.lid * .35;
+        hinge.rotation.x = -v.lid * 1.25;
+        hinge.rotation.z = v.lid * .18;
+      } else if (tier.id === 'diamond') {
+        hinge.position.y += v.lid * .75;
+        hinge.rotation.y = -v.lid * .7;
+      } else {
+        hinge.rotation.x = -v.lid * 1.95;
+      }
+    }
     for (const l of levers.current) if (l) l.rotation.x = v.clasp * 1.85
 
     // status light: amber while sealed or unlocking, tier color once open
@@ -261,7 +277,14 @@ function CaseRig({ tier, phase, rewardColor, reducedMotion, onActivate }: StageP
         onActivate?.()
       }}
     >
-      <CaseModel tier={tier} lidRef={lid} leverRefs={levers} led={led} glow={glow} />
+      {phase === 'open' && <Sparkles position={[0, .8, 0]} count={reducedMotion ? 4 : rewardRarity === 'Legendary' ? 48 : rewardRarity === 'Rare' ? 28 : 12} speed={reducedMotion ? 0 : .3} scale={[3.5, 2.5, 2.5]} size={rewardRarity === 'Legendary' ? 4 : 2} color={rewardColor ?? tier.ui} />}
+      {phase === 'open' && rewardLabel && <Html center position={[0, 1.55, 0]} style={{ pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+        <div className="rounded-2xl border px-5 py-3 text-center backdrop-blur-xl" style={{ borderColor: rewardColor ?? tier.ui, background: '#100b1ee8', boxShadow: `0 0 45px ${rewardColor ?? tier.ui}55` }}>
+          <span className="block text-[10px] uppercase tracking-[.2em] text-purple-200">Verified on-chain reward</span>
+          <strong className="mt-1 block text-xl" style={{ color: rewardColor ?? tier.ui }}>{rewardLabel}</strong>
+        </div>
+      </Html>}
+      <ThemedCaseModel tier={tier} lidRef={lid} leverRefs={levers} led={led} glow={glow} />
       {/* single invisible box for hover/click hit-testing; the case parts themselves don't raycast */}
       <mesh material={HIT_MATERIAL} position={[0, -0.02, 0]}>
         <boxGeometry args={[2.95, 1.9, 2.05]} />
@@ -308,7 +331,6 @@ export function CaseStage(props: StageProps) {
       <Backdrop tier={props.tier} />
       <Studio tier={props.tier} reducedMotion={props.reducedMotion} />
       <CaseRig key={props.tier.id} {...props} />
-      <PrecompileTiers />
       {/* The shadow re-renders the whole case from below, so only refresh it while something
           moves (tier entrance, opening, closing); the idle float is too small to notice. */}
       <ContactShadows

@@ -1,0 +1,13 @@
+{
+  "network": "testnet",
+  "accountId": "fujitora-paws.needmore_1_near.testnet",
+  "controllingPublicKey": "ed25519:BntboZwnJtLVnBBh4XffXUDwbaygCsQiMmhWXD3xCi6",
+  "authorization": "Existing user-controlled owner key, already retained in the OS keychain. No new private key generated or exported.",
+  "fundingYocto": "100000000000000000000000",
+  "gasSpentYocto": "7114989537500000000000",
+  "transactionHash": "7gC8pNMvHLm5BLj2aB81tzQxiDoNTQBfkUQGZMr2hnZB",
+  "status": "verified",
+  "accountVerified": true,
+  "recovery": "Retain the existing full-access signing and recovery mechanism for needmore_1_near.testnet. The same public key controls this separate account. The parent account alone cannot recover a subaccount if that key is lost.",
+  "charityRoutingActive": false
+}

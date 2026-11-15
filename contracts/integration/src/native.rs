@@ -141,6 +141,8 @@ pub(super) async fn verify() -> Result<()> {
     let native_wasm = std::fs::read(target.join("near_native_case_pool.wasm"))
         .context("Build native case WASM first")?;
     let token_wasm = std::fs::read(target.join("iroh_mock_token.wasm"))?;
+    let previous_wasm = std::env::var("NATIVE_PRE_UPGRADE_WASM").ok()
+        .map(std::fs::read).transpose().context("Read preserved pre-upgrade WASM")?;
     let rows = registry["cases"].as_array().context("Cases array")?;
     let mut specs = BTreeMap::<String, String>::new();
     for case in rows {
@@ -198,7 +200,7 @@ pub(super) async fn verify() -> Result<()> {
             .transact()
             .await?
             .into_result()?
-            .deploy(&native_wasm)
+            .deploy(if index == 0 { previous_wasm.as_deref().unwrap_or(&native_wasm) } else { &native_wasm })
             .await?
             .into_result()?;
         let mut config = row["config"].clone();
@@ -285,6 +287,28 @@ pub(super) async fn verify() -> Result<()> {
                 && failed["bonus_paid"] == false,
             "Missing token registration must preserve recoverable token payout: {failed}"
         );
+        if index == 0 && previous_wasm.is_some() {
+            let before_upgrade = view(&game, "get_pool", json!({})).await?;
+            game.as_account().deploy(&native_wasm).await?.into_result()?;
+            ensure!(view(&game, "get_pool", json!({})).await? == before_upgrade,
+                "Code upgrade changed existing native books");
+            ensure!(latest(&game, &player).await? == failed,
+                "Code upgrade changed existing claimable opening");
+            ensure!(view(&game, "get_charity", json!({})).await?.is_null(),
+                "Upgrade activated charity without authorization");
+        }
+        let charity_name = format!("paws-{index}");
+        let charity_id = format!("{charity_name}.{}", namespace.id());
+        let charity_storage = view(&game, "charity_storage_cost", json!({})).await?
+            .as_str().context("Charity storage quote")?.parse::<u128>()?;
+        let storage_before = game.as_account().view_account().await?.storage_usage;
+        owner.call(game.id(), "activate_charity")
+            .args_json(json!({"treasury_id":charity_id}))
+            .deposit(NearToken::from_yoctonear(charity_storage)).gas(Gas::from_tgas(60))
+            .transact().await?.into_result()?;
+        let storage_growth = game.as_account().view_account().await?.storage_usage - storage_before;
+        ensure!(u128::from(storage_growth) * 10_000_000_000_000_000_000 <= charity_storage,
+            "Charity activation storage was not owner-funded");
         let selected = tokens
             .values()
             .find(|t| Some(t.id().as_str()) == failed["bonus"]["token_contract_id"].as_str())
@@ -376,7 +400,47 @@ pub(super) async fn verify() -> Result<()> {
             personal["openings"][0] == global["openings"][0],
             "Personal and global records differ"
         );
-        evidence.push(json!({"case_id":config["case_id"],"price":price.to_string(),"storage":storage.to_string(),"opening":complete,"pool":pool,"case":view(&game,"get_case",json!({})).await?,"quote":quote,"checks":["native deposit","stale quote rejected","missing storage rejected","unregistered token fails safely","owner-only retry","private callbacks","actual FT wallet balance","no repeat native payment","duplicate claim rejected","native solvency","FT reserves reconciled","personal history","global history"]}));
+        ensure!(number(&view(&game, "get_charity", json!({})).await?, "available")? == 0,
+            "Pre-activation pending opening accrued charity fees");
+        for reward in config["bonus_rewards"].as_array().context("Reward candidates")? {
+            let token = tokens.values().find(|token| Some(token.id().as_str()) == reward["token_contract_id"].as_str()).context("Reward token")?;
+            register(&player, token, &player).await?;
+        }
+        let future_quote = view(&game, "get_quote", json!({"account_id":player.id()})).await?;
+        player.call(game.id(), "open")
+            .args_json(json!({"nonce":future_quote["nonce"],"quote":{"revision":future_quote["revision"],"expires_at":future_quote["expires_at"]}}))
+            .deposit(NearToken::from_yoctonear(price + storage)).gas(Gas::from_tgas(250))
+            .transact().await?.into_result()?;
+        ensure!(settle(&game, &player).await?["status"] == "Completed", "Future opening not paid");
+        let fee = price / 20;
+        ensure!(number(&view(&game, "get_charity", json!({})).await?, "available")? == fee,
+            "Future charity fee is not the included 5%");
+        let player_pool = view(&game, "get_pool", json!({})).await?["pool_funds"].clone();
+        let failed_transfer = owner.call(game.id(), "withdraw_charity")
+            .args_json(json!({"amount":fee.to_string()})).deposit(NearToken::from_yoctonear(1))
+            .gas(Gas::from_tgas(80)).transact().await?.into_result()?.json::<bool>()?;
+        ensure!(!failed_transfer, "Transfer to absent named treasury unexpectedly succeeded");
+        ensure!(number(&view(&game, "get_charity", json!({})).await?, "available")? == fee,
+            "Failed charity transfer did not release exactly once");
+        let treasury = namespace.create_subaccount(&charity_name)
+            .initial_balance(NearToken::from_near(1)).transact().await?.into_result()?;
+        let treasury_before = treasury.view_account().await?.balance.as_yoctonear();
+        let paid = owner.call(game.id(), "withdraw_charity")
+            .args_json(json!({"amount":fee.to_string()})).deposit(NearToken::from_yoctonear(1))
+            .gas(Gas::from_tgas(80)).transact().await?.into_result()?.json::<bool>()?;
+        ensure!(paid && treasury.view_account().await?.balance.as_yoctonear() == treasury_before + fee,
+            "Charity receiver did not receive the exact fee once");
+        let charity = view(&game, "get_charity", json!({})).await?;
+        ensure!(number(&charity, "available")? == 0 && number(&charity, "total_paid")? == fee &&
+            number(&charity, "retained_legacy_fees")? == fee, "Charity moved historical fees");
+        let after_charity = assert_books(&game, &tokens).await?;
+        ensure!(after_charity["pool_funds"] == player_pool, "Charity consumed player reserves");
+        let excess = owner.call(game.id(), "withdraw_charity")
+            .args_json(json!({"amount":"1"})).deposit(NearToken::from_yoctonear(1))
+            .gas(Gas::from_tgas(80)).transact().await?;
+        ensure!(excess.is_failure(), "Duplicate charity withdrawal accepted");
+        println!("PASS future-only charity fee, genuine native failure/retry, exact treasury balance and preserved player reserves");
+        evidence.push(json!({"case_id":config["case_id"],"price":price.to_string(),"storage":storage.to_string(),"opening":complete,"charity":charity,"charity_storage_growth":storage_growth,"upgrade_compatibility_verified":index == 0 && previous_wasm.is_some(),"pool":after_charity,"case":view(&game,"get_case",json!({})).await?,"quote":quote,"checks":["native deposit","stale quote rejected","missing storage rejected","unregistered token fails safely","owner-only retry","private callbacks","actual FT wallet balance","no repeat native payment","duplicate claim rejected","native solvency","FT reserves reconciled","personal history","global history"]}));
     }
     let report = json!({"network":"local NEAR Sandbox","payment_asset":"NEAR","cases":evidence,"live_testnet_transactions":false,"wasm_sha256":wasm_hash,"open_gas_tgas":150,"retry_gas_tgas":100});
     let output =

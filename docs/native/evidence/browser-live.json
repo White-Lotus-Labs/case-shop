@@ -1,0 +1,76 @@
+{
+  "network": "testnet",
+  "accountId": "needmore_1_near.testnet",
+  "caseId": "bamboo-mist",
+  "nonce": "2",
+  "call": {
+    "receiverId": "native-bamboo.needmore_1_near.testnet",
+    "methodName": "open",
+    "args": {
+      "nonce": "2",
+      "quote": {
+        "revision": "12",
+        "expires_at": "277822053"
+      }
+    },
+    "gas": "250000000000000",
+    "deposit": "90960000000000000000000"
+  },
+  "beforeBlock": "277821934",
+  "status": "verified",
+  "transactionHash": "CZS6ubJhjnJ7PJRikZ2ebZfHRBf4ciUEp6kjvQhreeR",
+  "gasSpent": "1412075102989800000000",
+  "priorSpentYocto": "2169134224730242000000000",
+  "approvedLimitYocto": "15000000000000000000000000",
+  "actualArgs": {
+    "nonce": "2",
+    "quote": {
+      "revision": "12",
+      "expires_at": "277822073"
+    }
+  },
+  "opening": {
+    "common": 495152,
+    "rare": 502935,
+    "legendary": 1913,
+    "denominator": 1000000,
+    "case_id": "bamboo-mist",
+    "opening_id": "2",
+    "account_id": "needmore_1_near.testnet",
+    "nonce": "2",
+    "accepted_height": "277822044",
+    "accepted_timestamp": "1794755912403542089",
+    "accepted_revision": "12",
+    "status": "Completed",
+    "reward": "20000000000000000000000",
+    "draw": 201422,
+    "attempt": "1",
+    "reserved": "0",
+    "near_paid": true,
+    "bonus_paid": true,
+    "bonus": {
+      "reward_id": "token-shitzu-0",
+      "token_contract_id": "iroh-test-shitzu.testnet",
+      "token_symbol": "SHITZU",
+      "token_decimals": 6,
+      "display_name": "Test Shitzu",
+      "amount": "25000000",
+      "tier": "Common",
+      "chance_in_tier_bps": 10000,
+      "funds": "75000000",
+      "available": "75000000",
+      "reserved": "0",
+      "in_flight": "0",
+      "candidates_in_tier": 2,
+      "selection_denominator": 2,
+      "expected_balance_min": "75000000",
+      "expected_balance_max": "75000000",
+      "testnet": true
+    },
+    "caseId": "bamboo-mist",
+    "tier": "Common",
+    "nearPaid": true,
+    "bonusPaid": true
+  },
+  "combinedSpentYocto": "2261506299833231800000000"
+}

@@ -10,6 +10,8 @@ use near_sdk::{
 };
 
 /// Config economics are microNEAR; every public monetary amount is yoctoNEAR.
+mod charity;
+
 const SCALE: u128 = 1_000_000_000_000_000_000;
 const OPENING_BYTES: u128 = 4096;
 const DRAW_GAS: Gas = Gas::from_tgas(100);
@@ -228,14 +230,15 @@ impl NativeCasePool {
     }
     pub fn get_pool(&self) -> Value {
         let c = self.config();
+        let charity_flight = charity::in_flight();
         json!({"payment_asset":"NEAR","pool_funds":self.pool.to_string(),"reserved_rewards":self.reserved.to_string(),
             "available":self.available().to_string(),"target":native(c.economy.target).to_string(),
             "health":c.economy.health(self.available()/SCALE),"pending_fees":self.pending_fees.to_string(),
-            "treasury_available":self.fees.to_string(),"treasury_in_flight":"0","in_flight_payouts":self.in_flight.to_string(),
+            "treasury_available":sub(self.fees,charity_flight).to_string(),"treasury_in_flight":charity_flight.to_string(),"in_flight_payouts":self.in_flight.to_string(),
             "pending_openings":self.pending,"completed_payouts":self.completed.to_string(),"total_paid":self.total_paid.to_string(),
             "revision":self.revision.to_string(),"paused":self.paused,"can_open":self.admission_error().is_none(),
             "storage_per_opening":Self::opening_cost().to_string(),"storage_account_cost":"0",
-            "expected_balance_min":sub(self.book(),self.in_flight).to_string(),"expected_balance_max":self.book().to_string()})
+            "expected_balance_min":sub(sub(self.book(),self.in_flight),charity_flight).to_string(),"expected_balance_max":self.book().to_string()})
     }
     pub fn get_quote(&self, account_id: AccountId) -> Value {
         let c = self.config();
@@ -556,6 +559,7 @@ impl NativeCasePool {
             let fee = native(self.config().economy.fee());
             self.pending_fees = sub(self.pending_fees, fee);
             self.fees = add(self.fees, fee);
+            charity::credit_completed(o.id, fee);
             self.completed = self.completed.checked_add(1).expect("Count overflow");
             self.pending = self.pending.checked_sub(1).expect("Pending underflow");
             self.active.remove(&o.account);
@@ -736,7 +740,7 @@ impl NativeCasePool {
             .checked_mul(u128::from(env::storage_usage()))
             .expect("Storage overflow");
         require!(
-            env::account_balance().as_yoctonear() >= add(sub(self.book(), self.in_flight), storage),
+            env::account_balance().as_yoctonear() >= add(sub(sub(self.book(), self.in_flight), charity::in_flight()), storage),
             "Native liabilities exceed liquid account balance"
         );
     }

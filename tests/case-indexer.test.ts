@@ -475,3 +475,8 @@ it('verifies the actual public transaction including logs from successful forwar
     },
   ]);
 });
+
+it('accepts a terminal Nearblocks page whose current API omits meta', () => {
+  const { meta: _meta, ...terminal } = raw;
+  expect(parseIndexedPage(terminal, 'needmore_1_near.testnet').nextCursor).toBeNull();
+});

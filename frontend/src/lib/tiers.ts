@@ -1,4 +1,4 @@
-// Visual identity of each case tier: Fujitora (One Piece Marine Admiral Issho) × NEAR Web3 Hackathon.
+// Visual identity of each case tier: Fujitora (One Piece Marine Admiral Issho) × NEAR Protocol.
 // Combines gravitational physics, celestial meteorites, Marine justice (正義), and NEAR Protocol brand aesthetics.
 
 export type Finish = "plain" | "brushed" | "textured";
@@ -42,12 +42,12 @@ export const TIERS: Record<string, TierVisual> = {
   bronze: {
     id: "bronze",
     number: "01",
-    name: "Gravity Blade",
-    tagline: "Shikomizue · Kinetic Pulse",
+    name: "Bamboo Mist",
+    tagline: "Morning mist · Bamboo reliquary",
     description:
-      "Forged with the resonant frequency of Fujitora's cane-sword. Dark wisteria titanium housing foundational gravitational energy on NEAR Protocol.",
-    kanji: "重力", // Gravity
-    ui: "#9d4edd",
+      "Five bound bamboo chambers carry the quiet of a mountain tea garden. Brass rings hold a violet gravity seal beneath the lacquered lid.",
+    kanji: "竹霧", // Gravity
+    ui: "#a7bc9c",
     body: {
       color: "#16132b",
       metalness: 0.15,
@@ -77,12 +77,12 @@ export const TIERS: Record<string, TierVisual> = {
   silver: {
     id: "silver",
     number: "02",
-    name: "Meteor Strike",
-    tagline: "Orbital Re-entry · NEAR Mint",
+    name: "Dragon Tea",
+    tagline: "Forged armor · Dragon seal",
     description:
-      "A dense atmospheric re-entry crate infused with NEAR Protocol mint emerald alloy. Captures meteoric debris pulled from high orbit.",
-    kanji: "隕石", // Meteor
-    ui: "#00EC97",
+      "A reinforced tea chest with mechanical locks and engraved metalwork. Its heavy shell guards a warm core, suspended in Fujitora's violet field.",
+    kanji: "龍茶", // Meteor
+    ui: "#c9a66f",
     body: {
       color: "#12202b",
       metalness: 0.85,
@@ -107,12 +107,12 @@ export const TIERS: Record<string, TierVisual> = {
   gold: {
     id: "gold",
     number: "03",
-    name: "Blind Justice",
-    tagline: "Admiral's Moral Code",
+    name: "Moon Spirit",
+    tagline: "Lunar vessel · Orbital rings",
     description:
-      "Adorned in the royal purple and gold insignia of Admiral Issho. Encrypted with decentralized smart contracts that see past worldly deceit.",
-    kanji: "正義", // Justice
-    ui: "#f59e0b",
+      "A polished lunar vessel floats inside gilded armillary rings. The two hemispheres part to reveal the reward beneath a pale violet glow.",
+    kanji: "月魂", // Justice
+    ui: "#baace1",
     body: {
       color: "#18122c",
       metalness: 0.6,
@@ -138,12 +138,12 @@ export const TIERS: Record<string, TierVisual> = {
   platinum: {
     id: "platinum",
     number: "04",
-    name: "Singularity Well",
-    tagline: "Gravitational Well · Event Horizon",
+    name: "Phoenix Flame",
+    tagline: "Obsidian casket · Rising wings",
     description:
-      "Pearl-violet ceramic suspension shell holding an artificial micro-singularity. Heavy gravitational curvature warps NEAR blockchain transaction blocks.",
-    kanji: "引力", // Attraction / Gravitation
-    ui: "#c084fc",
+      "Stepped copper wings rise from a tapered obsidian casket. An ember at its crest lights the shell as the gravity seal releases.",
+    kanji: "鳳炎", // Attraction / Gravitation
+    ui: "#e8a27d",
     body: {
       color: "#e2daf5",
       metalness: 0.05,
@@ -170,12 +170,12 @@ export const TIERS: Record<string, TierVisual> = {
   diamond: {
     id: "diamond",
     number: "05",
-    name: "Celestial Desolation",
-    tagline: "Heaven's Descent · Omega Vault",
+    name: "Uncle's Secret Reserve",
+    tagline: "Aged timber · Private reserve",
     description:
-      "The pinnacle of Fujitora's gravity artifice. Pure obsidian void-matter embedded with lab-crystallized gravity gems and synchronized to the NEAR validator consensus.",
-    kanji: "天降", // Heavenly Descent
-    ui: "#00EC97",
+      "A coopered wooden reserve bound by metal hoops and a wax-colored seal. The circular lid protects a collection kept for the rarest occasion.",
+    kanji: "秘蔵", // Heavenly Descent
+    ui: "#d5bf8d",
     body: {
       color: "#060512",
       metalness: 0.5,
@@ -211,7 +211,7 @@ const CASE_VISUALS: Record<string, string> = {
 export const tierOf = (caseId: string): TierVisual =>
   TIERS[CASE_VISUALS[caseId] ?? caseId] ?? TIERS.bronze;
 
-/** Drop rarity colors: Web3 Hackathon + Fujitora palette */
+/** Drop rarity colors: Fujitora palette */
 export const RARITY_COLOR: Record<string, string> = {
   Common: "#94a3b8",      // Meteoric Slate
   Uncommon: "#00EC97",    // NEAR Mint Green

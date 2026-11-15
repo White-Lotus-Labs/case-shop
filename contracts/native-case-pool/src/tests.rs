@@ -310,3 +310,88 @@ fn two_accounts_reserve_all_candidates_then_settle_in_reverse_order() {
             .all(|s| s.reserved == 0 && s.in_flight == 0)
     );
 }
+
+#[test]
+fn charity_excludes_existing_and_old_pending_fees_and_settles_once() {
+    let mut p = funded();
+    let old = open(&mut p, "alice.testnet");
+    let pool_before = p.pool;
+    assert!(p.get_charity().is_none());
+    set("owner.testnet", p.charity_storage_cost().0, 10);
+    p.activate_charity(account("paws.testnet"));
+    assert_eq!(p.get_charity().unwrap()["first_opening_id"], "1");
+    set("case.testnet", 0, 11);
+    p.resolve_opening(U64(old));
+    callback(true, Some(true));
+    assert!(p.on_payout(U64(old), U64(1)));
+    assert_eq!(p.get_charity().unwrap()["available"], "0");
+    let fresh = open(&mut p, "bob.testnet");
+    set("case.testnet", 0, 11);
+    p.resolve_opening(U64(fresh));
+    callback(true, Some(true));
+    assert!(p.on_payout(U64(fresh), U64(1)));
+    assert!(!p.on_payout(U64(fresh), U64(1)));
+    let fee = native(25_000);
+    assert_eq!(p.fees, fee * 2);
+    assert_eq!(p.get_charity().unwrap()["available"], fee.to_string());
+    let reserves = p.reserved;
+    let pool = p.pool;
+    assert!(pool <= pool_before + native(475_000));
+    set("owner.testnet", 1, 12);
+    p.withdraw_charity(U128(fee)).detach();
+    assert_eq!(p.fees, fee * 2);
+    assert_eq!(p.get_charity().unwrap()["available"], "0");
+    assert_eq!(p.get_pool()["treasury_in_flight"], fee.to_string());
+    callback(true, None);
+    assert!(p.on_charity_transfer(U64(1)));
+    assert!(!p.on_charity_transfer(U64(1)));
+    assert_eq!(p.fees, fee);
+    assert_eq!(p.get_charity().unwrap()["total_paid"], fee.to_string());
+    assert_eq!(p.pool, pool);
+    assert_eq!(p.reserved, reserves);
+}
+
+#[test]
+fn charity_failed_transfer_releases_reservation_and_stale_callback_cannot_pay_again() {
+    let mut p = funded();
+    set("owner.testnet", p.charity_storage_cost().0, 10);
+    p.activate_charity(account("paws.testnet"));
+    let id = open(&mut p, "alice.testnet");
+    set("case.testnet", 0, 11);
+    p.resolve_opening(U64(id));
+    callback(true, Some(true));
+    p.on_payout(U64(id), U64(1));
+    let fee = native(25_000);
+    set("owner.testnet", 1, 12);
+    p.withdraw_charity(U128(fee)).detach();
+    callback(false, None);
+    assert!(!p.on_charity_transfer(U64(1)));
+    assert!(!p.on_charity_transfer(U64(1)));
+    assert_eq!(p.get_charity().unwrap()["available"], fee.to_string());
+    assert_eq!(p.fees, fee);
+    set("owner.testnet", 1, 13);
+    p.withdraw_charity(U128(fee)).detach();
+    callback(true, None);
+    assert!(!p.on_charity_transfer(U64(1)));
+    assert!(p.on_charity_transfer(U64(2)));
+    assert_eq!(p.fees, 0);
+    assert_eq!(p.get_charity().unwrap()["total_paid"], fee.to_string());
+}
+
+#[test]
+#[should_panic(expected = "Owner only")]
+fn charity_activation_requires_owner() {
+    let mut p = funded();
+    set("attacker.testnet", p.charity_storage_cost().0, 10);
+    p.activate_charity(account("paws.testnet"));
+}
+
+#[test]
+#[should_panic(expected = "Insufficient charity fees")]
+fn charity_cannot_withdraw_old_fees_or_player_reserves() {
+    let mut p = funded();
+    set("owner.testnet", p.charity_storage_cost().0, 10);
+    p.activate_charity(account("paws.testnet"));
+    set("owner.testnet", 1, 10);
+    p.withdraw_charity(U128(1)).detach();
+}
